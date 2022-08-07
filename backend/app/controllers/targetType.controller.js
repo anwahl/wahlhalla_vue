@@ -4,7 +4,7 @@ const db = require("../models");
 const TargetType = db.targetTypes;
 const Op = db.Sequelize.Op;
 
-module.exports = class TaskTypeController extends ObjectController {
+module.exports = class TargetTypeController extends ObjectController {
     constructor(targetType) {
         super(targetType);
      }
