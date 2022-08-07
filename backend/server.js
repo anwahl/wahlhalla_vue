@@ -3,12 +3,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 var corsOptions = {
-  origin: "*"
+  origin: "http://localhost:5173"
 };
 const PORT = process.env.PORT || 8080;
 
 const db = require("./app/models");
-db.sequelize.sync();
+db.sequelize.sync({ force: true });
 
 app.use(cors(corsOptions))
     .use(bodyParser.json())
