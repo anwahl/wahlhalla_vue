@@ -3,20 +3,20 @@ class PersonDataService {
   getAll() {
     return http.get("/person");
   }
-  get(id: any) {
+  get(id: number) {
     return http.get(`/person/${id}`);
   }
   create(data: any) {
     return http.post("/person", data);
   }
-  update(id: any, data: any) {
+  update(id: number, data: any) {
     return http.put(`/person/${id}`, data);
   }
-  delete(id: any) {
+  delete(id: number) {
     return http.delete(`/person/${id}`);
   }
-  findByName(name: any) {
-    return http.get(`/person?name=${name}`);
+  findByName(name: string) {
+    return http.get(`/person/name/${name}`);
   }
 }
 export default new PersonDataService();
