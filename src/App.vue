@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import Login from "@/components/LoginButton.vue";
+import Logout from "@/components/LogoutButton.vue";
+</script>
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
@@ -8,6 +12,12 @@
         </li>
         <li class="nav-item">
           <a href="/person/add" class="nav-link">Add Person</a>
+        </li>
+        <li class="nav-item">
+          <Login />
+        </li>
+        <li class="nav-item">
+          <Logout />
         </li>
       </div>
     </nav>

@@ -5,7 +5,7 @@
     data() {
       return {
         tabulator: null, //variable to hold your table
-        ajaxData: 'https://localhost:8080/assignedTasks?type=CHORE&complete=0'
+        ajaxData: 'http://localhost:8080/api/assignedTask/'
       }
     },
     mounted() {
@@ -19,7 +19,7 @@
         columns:[
             {title:"Name", field:"username", editor:"input"},
             {title:"Task", field:"taskName", editor:"list", editorParams:{
-                valuesURL: "https://localhost:8080/tasks/",
+                valuesURL: "http://localhost:8080/api/assignedTask/",
                 itemFormatter: function(label, value, item, element){
                     return item.name;
                 },

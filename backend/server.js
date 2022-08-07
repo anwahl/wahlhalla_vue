@@ -20,5 +20,11 @@ app.use(cors(corsOptions))
         console.log(`Server is running on port ${PORT}.`)
     });
 
+require("./app/routes/assignedTask.routes")(app);
 require("./app/routes/person.routes")(app);
+require("./app/routes/subtask.routes")(app);
+require("./app/routes/target.routes")(app);
+require("./app/routes/targetType.routes")(app);
+require("./app/routes/task.routes")(app);
+require("./app/routes/taskType.routes")(app);
 

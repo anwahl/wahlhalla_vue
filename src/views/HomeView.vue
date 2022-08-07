@@ -5,5 +5,6 @@ import TaskTable from "@/components/TaskTable.vue";
 <template>
   <main>
     <TaskTable />
+
   </main>
 </template>

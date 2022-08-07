@@ -38,7 +38,7 @@
         <div>
           <label><strong>Email:</strong></label> {{ currentPerson.email }}
         </div>
-        <a class="badge badge-warning"
+        <a 
           :href="'/person/' + currentPerson.id">
           Edit
         </a>
