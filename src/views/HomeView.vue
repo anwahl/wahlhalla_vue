@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TheWelcome from "@/components/TheWelcome.vue";
+import TaskTable from "@/components/TaskTable.vue";
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <TaskTable />
   </main>
 </template>

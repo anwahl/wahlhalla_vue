@@ -11,5 +11,11 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
+    extensions: [".js", ".ts", ".vue"]
   },
+  build: {
+    commonjsOptions: {
+       esmExternals: true 
+    },
+ }
 });

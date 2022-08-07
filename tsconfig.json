@@ -10,5 +10,11 @@
     {
       "path": "./tsconfig.vitest.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "module": "es2015",
+    "moduleResolution": "node",
+    "strict": true,
+    "experimentalDecorators": true
+  }
 }
