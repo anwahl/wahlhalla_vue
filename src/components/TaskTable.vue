@@ -1,25 +1,24 @@
-<script>
-  import {TabulatorFull as Tabulator} from 'tabulator-tables'; //import Tabulator library
+<script setup>
+  import {ref, reactive, onMounted} from 'vue';
+  import {TabulatorFull as Tabulator} from 'tabulator-tables'; 
 
-  export default {
-    data() {
-      return {
-        tabulator: null, //variable to hold your table
-        ajaxData: 'http://localhost:8080/api/assignedTask/'
-      }
-    },
-    mounted() {
-      this.tabulator = new Tabulator(this.$refs.table, {
-        data: this.ajaxData,
+
+  const table = ref(null); 
+  const tabulator = ref(null); 
+  const tableData = reactive([]);
+
+  onMounted(() => {
+      tabulator.value = new Tabulator(table.value, {
+        ajaxUrl: 'http://localhost:8080/api/assignedTask/',
         layout:"fitColumns",
         reactiveData:true,
         pagination:"local",
-        paginationSize:6,
+        paginationSize:5,
         paginationSizeSelector:[5, 10, 20],
         columns:[
             {title:"Name", field:"username", editor:"input"},
             {title:"Task", field:"taskName", editor:"list", editorParams:{
-                valuesURL: "http://localhost:8080/api/assignedTask/",
+                valuesURL: "http://localhost:8080/api/task/",
                 itemFormatter: function(label, value, item, element){
                     return item.name;
                 },
@@ -40,8 +39,8 @@
             }},
         ],
       });
-    }
-  }
+    return{tabulator, table};
+})
 </script>
 
 <template>

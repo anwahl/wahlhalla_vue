@@ -52,6 +52,9 @@
 </template>
 <script>
 import PersonDataService from "@/services/PersonDataService";
+import GET from "@/composables/GET";
+import auth0 from "/auth0Client";
+
 export default {
   name: "persons-list",
   data() {
@@ -63,15 +66,9 @@ export default {
     };
   },
   methods: {
-    retrievePersons() {
-      PersonDataService.getAll()
-        .then(response => {
-          this.persons = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    async retrievePersons() {
+      var accessToken = await auth0.getTokenSilently();
+      this.persons = await GET("person", accessToken);
     },
     refreshList() {
       this.retrievePersons();
@@ -82,16 +79,9 @@ export default {
       this.currentPerson = person;
       this.currentIndex = index;
     },
-    
-    searchByName() {
-      PersonDataService.findByName(this.name)
-        .then(response => {
-          this.persons = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    async searchByName() {
+      var accessToken = await auth0.getTokenSilently();
+      this.persons = await GET(`person/name/'${this.name}'`, accessToken);
     }
   },
   mounted() {

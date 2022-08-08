@@ -38,6 +38,10 @@
 </template>
 <script>
 import PersonDataService from "@/services/PersonDataService";
+import PUT from "@/composables/PUT";
+import DELETE from "@/composables/DELETE";
+import GET from "@/composables/GET";
+import auth0 from "/auth0Client";
 export default {
   name: "person",
   data() {
@@ -47,35 +51,17 @@ export default {
     };
   },
   methods: {
-    getPerson(id) {
-      PersonDataService.get(id)
-        .then(response => {
-          this.currentPerson = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    async getPerson(id) {
+      var accessToken = await auth0.getTokenSilently();
+      this.currentPerson = await GET(`person/${id}`, accessToken);
     },
-    updatePerson() {
-      PersonDataService.update(this.currentPerson.id, this.currentPerson)
-        .then(response => {
-          console.log(response.data);
-          this.message = 'The Person was updated successfully!';
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    async updatePerson(id) {
+      var accessToken = await auth0.getTokenSilently();
+      await PUT(`person/${this.currentPerson.id}`, accessToken, this.currentPerson);
     },
-    deletePerson() {
-      PersonDataService.delete(this.currentPerson.id)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push('/persons');
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    async deletePerson() {
+      var accessToken = await auth0.getTokenSilently();
+      await DELETE(`person/${this.currentPerson.id}`, accessToken);
     }
   },
   mounted() {

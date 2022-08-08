@@ -5,7 +5,7 @@ import Logout from "@/components/LogoutButton.vue";
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <a href="#" class="navbar-brand">Wahlhalla</a>
+      <a href="/" class="navbar-brand">Wahlhalla</a>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
           <a href="/persons" class="nav-link">People</a>

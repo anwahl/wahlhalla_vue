@@ -44,6 +44,9 @@
 import {  Vue } from "vue-property-decorator";
 import PersonDataService from "@/services/PersonDataService";
 import Person from "@/types/Person";
+import POST from "@/composables/POST";
+import auth0 from "/auth0Client";
+
 export default class AddPerson extends Vue {
   private person: Person = {
     id: null,
@@ -51,20 +54,15 @@ export default class AddPerson extends Vue {
     lastName: "",
     email: ""
   };
-  savePerson() {
+  async savePerson() {
     let data = {
       firstName: this.person.firstName,
       lastName: this.person.lastName,
       email: this.person.email,
     };
-    PersonDataService.create(data)
-      .then((response) => {
-        this.person.id = response.data.id;
-        console.log(response.data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+      var accessToken = await auth0.getTokenSilently();
+      this.person.id = await POST("person", accessToken, data).id;
+  
   }
   newPerson() {
     this.Person = {} as Person;

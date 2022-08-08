@@ -2,17 +2,34 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+var { expressjwt: jwt } = require('express-jwt');
+var jwks = require('jwks-rsa');
+const jwtAuthz = require('express-jwt-authz');
 var corsOptions = {
-  origin: "http://localhost:5173"
+  origin: "*"
 };
 const PORT = process.env.PORT || 8080;
 
 const db = require("./app/models");
 db.sequelize.sync({ force: true });
 
+
+var jwtCheck = jwt({
+    secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: 'https://small-heart-7891.us.auth0.com/.well-known/jwks.json'
+  }),
+  audience: process.env.AUDIENCE,
+  issuer: process.env.ISSUER_BASE_URL,
+  algorithms: ['RS256']
+});
+
 app.use(cors(corsOptions))
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
+    .use(jwtCheck)
     .get("/", (req, res) => {
         res.json({ message: "Wahlhalla" })
         })
