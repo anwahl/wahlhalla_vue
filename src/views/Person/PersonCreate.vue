@@ -1,6 +1,6 @@
 <template>
   <div class="submit-form">
-    <div v-if="!submitted">
+    <div>
       <div class="form-group">
         <label for="firstName">First Name</label>
         <input
@@ -34,21 +34,17 @@
       </div>
       <button @click="savePerson" class="btn btn-success">Submit</button>
     </div>
-    <div v-else>
-      <h4>Person Created successfully!</h4>
-      <button class="btn btn-success" @click="newPerson">Add</button>
-    </div>
   </div>
 </template>
 <script lang="ts">
 import {  Vue } from "vue-property-decorator";
 import PersonDataService from "@/services/PersonDataService";
-import Person from "@/types/Person";
+import type Person from "@/types/Person";
 import POST from "@/composables/POST";
-import auth0 from "/auth0Client";
+import auth0 from "@/composables/auth0Client";
 
 export default class AddPerson extends Vue {
-  private person: Person = {
+  public person: Person = {
     id: null,
     firstName: "",
     lastName: "",
@@ -61,11 +57,12 @@ export default class AddPerson extends Vue {
       email: this.person.email,
     };
       var accessToken = await auth0.getTokenSilently();
-      this.person.id = await POST("person", accessToken, data).id;
+      let result = await POST("person", accessToken, data);
+      this.person.id = result.id;
   
   }
   newPerson() {
-    this.Person = {} as Person;
+    this.person = {} as Person;
   }
 }
 </script>

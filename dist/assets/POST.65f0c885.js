@@ -1,0 +1,1 @@
+async function s(a,o,n){const t=await(await fetch(`http://localhost:8080/api/${a}`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+o},body:JSON.stringify(n)})).json();return console.log(t),await t}export{s as P};

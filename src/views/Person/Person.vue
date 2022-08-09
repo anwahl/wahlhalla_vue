@@ -41,7 +41,7 @@ import PersonDataService from "@/services/PersonDataService";
 import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import GET from "@/composables/GET";
-import auth0 from "/auth0Client";
+import auth0 from "@/composables/auth0Client";
 export default {
   name: "person",
   data() {

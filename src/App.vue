@@ -1,17 +1,16 @@
-<script setup lang="ts">
-import Login from "@/components/LoginButton.vue";
-import Logout from "@/components/LogoutButton.vue";
-</script>
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <a href="/" class="navbar-brand">Wahlhalla</a>
+      <RouterLink to="/" class="navbar-brand">Wahlhalla</RouterLink>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a href="/persons" class="nav-link">People</a>
+          <RouterLink to="/assignedTasks" class="nav-link">Assigned Task List</RouterLink>
         </li>
         <li class="nav-item">
-          <a href="/person/add" class="nav-link">Add Person</a>
+          <RouterLink to="/persons" class="nav-link">People</RouterLink>
+        </li>
+        <li class="nav-item">
+          <RouterLink to="/person/add" class="nav-link">Add Person</RouterLink>
         </li>
         <li class="nav-item">
           <Login />
@@ -28,5 +27,7 @@ import Logout from "@/components/LogoutButton.vue";
 </template>
 <script lang="ts">
 import {  Vue } from "vue-property-decorator";
+import Login from "@/components/LoginButton.vue";
+import Logout from "@/components/LogoutButton.vue";
 export default class App extends Vue {}
 </script>

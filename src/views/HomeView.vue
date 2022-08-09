@@ -1,10 +1,14 @@
-<script setup lang="ts">
-import TaskTable from "@/components/TaskTable.vue";
-</script>
-
 <template>
-  <main>
-    <TaskTable />
-
-  </main>
+  <div class="callback">Callback</div>
 </template>
+ 
+<script>
+export default {
+  name: 'callback',
+  mounted() {
+    this.$auth.handleAuthentication().then((data) => {
+      this.$router.push({ name: 'home' })
+    })
+  }
+}
+</script>

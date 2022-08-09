@@ -15,6 +15,11 @@ const router = createRouter({
       component: () => import("@/views/Callback.vue")
     },
     {
+      path: '/assignedTasks',
+      name: 'assignedTask-list',
+      component: () => import("@/views/AssignedTaskTable.vue")
+    },
+    {
       path: "/persons",
       name: "people",
       component: () => import("@/views/Person/PersonList.vue"),
@@ -28,8 +33,14 @@ const router = createRouter({
     },
     {
       path: "/person/add",
-      name: "add",
-      component: () => import("@/views/Person/AddPerson.vue"),
+      name: "add-person",
+      component: () => import("@/views/Person/PersonCreate.vue"),
+      beforeEnter: authGuard
+    },
+    {
+      path: "/task/add",
+      name: "add-task",
+      component: () => import("@/views/Task/TaskCreate.vue"),
       beforeEnter: authGuard
     }
   ],

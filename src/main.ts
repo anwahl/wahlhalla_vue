@@ -1,5 +1,4 @@
 import { createApp } from "vue";
-import { createPinia } from "pinia";
 import BootstrapVue3 from 'bootstrap-vue-3'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
@@ -10,10 +9,9 @@ import "./assets/main.css";
 
 const app = createApp(App);
 
-app.use(createPinia())
+app
     .use(router)
-    .use(
-        createAuth0({
+    .use(createAuth0({
             domain: import.meta.env.VITE_AUTH0_DOMAIN,
             client_id: import.meta.env.VITE_AUTH0_CLIENT_ID,
             redirect_uri: window.location.origin,
@@ -21,11 +19,4 @@ app.use(createPinia())
         })
     )
     .use(BootstrapVue3)
-    .mixin({
-        methods: {
-          globalHelper: function () {
-            alert("Hello world")
-          },
-        },
-      })
     .mount("#app");
