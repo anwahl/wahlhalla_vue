@@ -38,7 +38,6 @@
 </template>
 <script lang="ts">
 import {  Vue } from "vue-property-decorator";
-import PersonDataService from "@/services/PersonDataService";
 import type Person from "@/types/Person";
 import POST from "@/composables/POST";
 import auth0 from "@/composables/auth0Client";

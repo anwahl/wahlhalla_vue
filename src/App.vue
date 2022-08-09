@@ -1,3 +1,16 @@
+<script lang="ts">
+import {  Vue } from "vue-property-decorator";
+import Login from "@/components/LoginButton.vue";
+import Logout from "@/components/LogoutButton.vue";
+export default  {
+  name: "App",
+  components: {Login, Logout, NavBar},
+  setup() {
+    console.log('Loading...');
+    return {};
+  },
+}
+</script>
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
@@ -25,9 +38,3 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import {  Vue } from "vue-property-decorator";
-import Login from "@/components/LoginButton.vue";
-import Logout from "@/components/LogoutButton.vue";
-export default class App extends Vue {}
-</script>

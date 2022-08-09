@@ -51,7 +51,6 @@
   </div>
 </template>
 <script>
-import PersonDataService from "@/services/PersonDataService";
 import GET from "@/composables/GET";
 import auth0 from "@/composables/auth0Client";
 

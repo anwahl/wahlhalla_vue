@@ -37,7 +37,6 @@
   </div>
 </template>
 <script>
-import PersonDataService from "@/services/PersonDataService";
 import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import GET from "@/composables/GET";

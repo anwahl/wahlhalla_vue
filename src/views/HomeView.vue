@@ -1,14 +1,11 @@
 <template>
-  <div class="callback">Callback</div>
+  <div>
+        <img src="/images/WAHLHALLA-W.png" />
+  </div>
 </template>
  
 <script>
 export default {
-  name: 'callback',
-  mounted() {
-    this.$auth.handleAuthentication().then((data) => {
-      this.$router.push({ name: 'home' })
-    })
-  }
+  
 }
 </script>
