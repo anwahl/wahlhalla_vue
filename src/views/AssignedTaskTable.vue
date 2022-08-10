@@ -5,6 +5,7 @@
   import PUT from "@/composables/PUT";
   import DELETE from "@/composables/DELETE";
   import GET from "@/composables/GET";
+  import router from '@/router'
 
 
   const table = ref(null); 
@@ -63,7 +64,8 @@
     {
         label:"Create Person",
         action:function(e, column){
-            
+            router.push({ path: '/person/create' });
+            //showModal = true;
         }
     },
   ];
@@ -212,7 +214,18 @@
     return{tabulator, table};
 })
 </script>
+<script>
+import { VueFinalModal } from 'vue-final-modal';
+import PersonCreate from "./Person/PersonCreate.vue";
+import Person from "./Person/Person.vue";
 
+export default {
+  components: {PersonCreate, Person, VueFinalModal},
+}
+</script>
 <template>
+  <vue-final-modal id="assignedTaskTableModal" :esc-to-close="true" classes="modal-container" content-class="modal-content" >
+    <router-view></router-view>
+  </vue-final-modal>
   <div ref="table"></div>
 </template>

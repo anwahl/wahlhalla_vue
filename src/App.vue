@@ -1,40 +1,115 @@
+<template>
+  <nav>
+    <SidebarMenu :menu="menu"  @item-click="onItemClick" :collapsed="collapsed"  @update:collapsed="onToggleCollapse"  />
+  </nav>
+  <main id="main-view" :class="{'collapsed' : collapsed}">
+    <router-view />
+  </main>
+</template>
 <script lang="ts">
 import {  Vue } from "vue-property-decorator";
-import Login from "@/components/LoginButton.vue";
-import Logout from "@/components/LogoutButton.vue";
+import { SidebarMenu } from 'vue-sidebar-menu';
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
+import auth0 from "@/composables/auth0Client";
+
 export default  {
   name: "App",
-  components: {Login, Logout, NavBar},
+  components: { SidebarMenu },
   setup() {
     console.log('Loading...');
     return {};
   },
+  data() {
+        return {
+            menu: [
+              {
+                  header: "Tasks",
+                  hiddenOnCollapse: true
+              },
+              {
+                  href: '/',
+                  title: 'Dashboard',
+                  icon: {
+                      element: 'img',
+                      attributes: {src: "src/assets/images/WAHLHALLA-W.png"}
+                      // text: ''
+                  }
+              },
+              {
+                  title: 'View',
+                  icon: 'bi bi-view-list',
+                  child: [
+                  {
+                      href: '/assignedTasks',
+                      title: 'Assigned Tasks',
+                      icon: 'bi bi-list-task',
+                  },
+                  {
+                      href: '/persons',
+                      title: 'People',
+                      icon: 'bi bi-people',
+                  }
+                  ]
+              },
+              {
+                  header: 'Utilities',
+                  hiddenOnCollapse: true
+              },
+              {
+                  title: 'Login',
+                  icon: 'bi bi-person-circle'
+              },
+              {
+                  title: 'Sign Out',
+                  icon: 'bi bi-person-x-fill'
+              }
+            ],
+            collapsed: false
+        }
+    },
+    methods : {
+        // @ts-ignore
+        onToggleCollapse (collapsed) {
+            // @ts-ignore
+            this.collapsed = collapsed;
+        },
+        // @ts-ignore
+        onItemClick (event, item) {
+            if (item.title === 'Login') {
+                auth0.loginWithRedirect();
+            }
+            if (item.title === 'Sign Out') {
+                auth0.logout({ returnTo: window.location.origin });
+            }
+        },
+        onResize () {
+            if (window.innerWidth <= 767) {
+                // @ts-ignore
+                this.collapsed = true;
+            } else {
+                // @ts-ignore
+                this.collapsed = false;
+            }
+        }
+    },
+    mounted () {
+        // @ts-ignore
+        this.onResize();
+        // @ts-ignore
+        window.addEventListener('resize', this.onResize);
+    }
+}
+export class App extends Vue {
+
 }
 </script>
-<template>
-  <div id="app">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <RouterLink to="/" class="navbar-brand">Wahlhalla</RouterLink>
-      <div class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <RouterLink to="/assignedTasks" class="nav-link">Assigned Task List</RouterLink>
-        </li>
-        <li class="nav-item">
-          <RouterLink to="/persons" class="nav-link">People</RouterLink>
-        </li>
-        <li class="nav-item">
-          <RouterLink to="/person/add" class="nav-link">Add Person</RouterLink>
-        </li>
-        <li class="nav-item">
-          <Login />
-        </li>
-        <li class="nav-item">
-          <Logout />
-        </li>
-      </div>
-    </nav>
-    <div class="container mt-3">
-      <router-view />
-    </div>
-  </div>
-</template>
+
+<style>
+#main-view {
+  padding-left: 350px;
+  transition: 0.3s ease;
+}
+#main-view.collapsed {
+  padding-left: 110px;
+}
+</style>

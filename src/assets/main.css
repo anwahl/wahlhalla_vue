@@ -1,12 +1,16 @@
 @import "./base.css";
 @import  "tabulator-tables";
+@import  "bootstrap-icons";
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
+  max-width: 1600px;
   padding: 2rem;
-
   font-weight: normal;
+}
+
+body {
+  display: flex;
+  place-items: center;
 }
 
 a,
@@ -22,15 +26,73 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+.btn {
+  margin: .5rem;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.btn-primary {
+  background: rgb(178, 63, 220);
+}
+
+.btn-secondary {
+  background: rgb(220, 220, 63);
+  color: rgb(112, 65, 130)
+}
+
+.modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--color-background-soft);
+  width: 50%;
+  border-radius: 20px;
+  box-shadow: 20px 20px 10px var(--color-background-mute);
+}
+
+.list-group-item.active {
+  background: var(--vt-c-purple-soft);
+  border-color: var(--vt-c-purple-mute);
+}
+
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 2rem;
+}
+
+.submit-form {
+  max-width: 300px;
+  margin: auto;
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.v-sidebar-menu {
+  background: rgb(89, 73, 95);
+  box-shadow: 20px 20px 10px var(--color-background-mute);
+}
+
+.v-sidebar-menu .vsm--dropdown {
+  background: rgb(133, 117, 138);
+}
+
+.v-sidebar-menu.vsm_expanded .vsm--link_level-1.vsm--link_open {
+  background: rgb(206, 200, 146);
+  box-shadow: inset 3px 0 0 0 #6f6e4c;
+}
+
+.v-sidebar-menu.vsm_expanded .vsm--link_level-1.vsm--link_open .vsm--icon {
+  background: rgb(127, 123, 80);
+}
+
+.v-sidebar-menu .vsm--toggle-btn {
+  background: rgb(65, 58, 68);
 }

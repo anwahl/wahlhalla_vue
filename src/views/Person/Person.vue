@@ -1,7 +1,7 @@
 <template>
-  <div v-if="currentPerson" class="edit-form">
-    <h4>Person</h4>
+  <div v-if="currentPerson" class="submit-form">
     <form>
+      <span class="form-title">Edit Person</span>
       <div class="form-group">
         <label for="firstName">First Name</label>
         <input type="text" class="form-control" id="firstName"
@@ -21,13 +21,13 @@
           />
       </div>
     </form>
-    <button class="badge badge-danger mr-2"
-      @click="deletePerson">
-      Delete
-    </button>
-    <button type="submit" class="badge badge-success"
-      @click="updatePerson">
+    <button type="submit" class="btn btn-primary"
+      @click="updatePerson(this.currentPerson.id); $emit('onFormSubmit')">
       Update
+    </button>
+    <button class="btn btn-secondary"
+      @click="deletePerson(); $emit('onFormSubmit')">
+      Delete
     </button>
     <p>{{ message }}</p>
   </div>
@@ -41,8 +41,13 @@ import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import GET from "@/composables/GET";
 import auth0 from "@/composables/auth0Client";
+import { watch } from 'vue';
 export default {
   name: "person",
+  emits: 'onFormSubmit',
+  props:{
+    personId: Number
+  },
   data() {
     return {
       currentPerson: null,
@@ -65,13 +70,11 @@ export default {
   },
   mounted() {
     this.message = '';
-    this.getPerson(this.$route.params.id);
+    this.getPerson(this.personId);
+    watch(() => this.personId, async (newId, oldId) => { 
+        this.getPerson(newId);
+    });
+    
   }
 };
 </script>
-<style>
-.edit-form {
-  max-width: 300px;
-  margin: auto;
-}
-</style>

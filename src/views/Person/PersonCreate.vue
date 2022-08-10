@@ -1,5 +1,6 @@
 <template>
   <div class="submit-form">
+  <span class="form-title">Add a Person</span>
     <div>
       <div class="form-group">
         <label for="firstName">First Name</label>
@@ -32,7 +33,7 @@
           name="email"
         />
       </div>
-      <button @click="savePerson" class="btn btn-success">Submit</button>
+      <button @click="savePerson(); $emit('onFormSubmit')" class="btn btn-success">Submit</button>
     </div>
   </div>
 </template>
@@ -42,32 +43,34 @@ import type Person from "@/types/Person";
 import POST from "@/composables/POST";
 import auth0 from "@/composables/auth0Client";
 
-export default class AddPerson extends Vue {
-  public person: Person = {
-    id: null,
-    firstName: "",
-    lastName: "",
-    email: ""
-  };
-  async savePerson() {
-    let data = {
-      firstName: this.person.firstName,
-      lastName: this.person.lastName,
-      email: this.person.email,
-    };
-      var accessToken = await auth0.getTokenSilently();
-      let result = await POST("person", accessToken, data);
-      this.person.id = result.id;
-  
-  }
-  newPerson() {
-    this.person = {} as Person;
+export default  {
+  name: "person-create",
+  emits: 'onFormSubmit',
+  data() {
+    return {
+      person: {
+        id: null,
+        firstName: "",
+        lastName: "",
+        email: ""
+      }
+    }
+  },
+  methods: {
+      async savePerson() {
+        let data = {
+          // @ts-ignore
+          firstName: this.person.firstName,
+          // @ts-ignore
+          lastName: this.person.lastName,
+          // @ts-ignore
+          email: this.person.email,
+        };
+        let accessToken = await auth0.getTokenSilently();
+        let result = await POST("person", accessToken, data);
+        // @ts-ignore
+        this.person.id = result.id;
+    }
   }
 }
 </script>
-<style scoped>
-.submit-form {
-  max-width: 300px;
-  margin: auto;
-}
-</style>

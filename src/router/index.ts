@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { authGuard } from "@auth0/auth0-vue";
+import { useAuth0 } from '@auth0/auth0-vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +8,17 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("@/views/HomeView.vue")
+      component: () => { return import("@/views/HomeView.vue") }
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => { return import("@/components/LoginButton.vue") }
+    },
+    {
+      path: "/logout",
+      name: "logout",
+      component: () => import("@/components/LogoutButton.vue")
     },
     {
       path: '/callback',
@@ -21,8 +32,8 @@ const router = createRouter({
     },
     {
       path: "/persons",
-      name: "people",
-      component: () => import("@/views/Person/PersonList.vue"),
+      name: "people-list",
+      component: () => { return import("@/views/Person/PersonList.vue") }, 
       beforeEnter: authGuard
     },
     {
@@ -32,14 +43,14 @@ const router = createRouter({
       beforeEnter: authGuard
     },
     {
-      path: "/person/add",
-      name: "add-person",
+      path: "/person/create",
+      name: "person-create",
       component: () => import("@/views/Person/PersonCreate.vue"),
       beforeEnter: authGuard
     },
     {
-      path: "/task/add",
-      name: "add-task",
+      path: "/task/create",
+      name: "task-create",
       component: () => import("@/views/Task/TaskCreate.vue"),
       beforeEnter: authGuard
     }
