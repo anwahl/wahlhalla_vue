@@ -46,7 +46,9 @@ export default  {
   emits: ['onFormSubmit'],
   data() {
     let object = { id: null };
+    // @ts-ignore
     this.objectProps.forEach((element) => {
+        // @ts-ignore
         object[element.name] = null
     });
     return {
@@ -64,16 +66,20 @@ export default  {
   methods: {
       async saveObject() {
         let data = { };
+        // @ts-ignore
         this.objectProps.forEach((element) => {
+            // @ts-ignore
             data[element.name] = this.object[element.name];
         });
 
         let accessToken = await auth0.getTokenSilently();
+        // @ts-ignore
         let result = await POST(this.objectURL, accessToken, data);
         // @ts-ignore
         this.object.id = result.id;
-
+        // @ts-ignore
         this.objectProps.forEach((element) => {
+            // @ts-ignore
             this.object[element.name] = null;
         });
     }
