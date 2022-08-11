@@ -1,7 +1,6 @@
 
 export default async function POST (url, accessToken, body) {
-    let returnData;
-    const result = await fetch(`http://localhost:8080/api/${url}`, {
+    const result = await fetch(`${import.meta.env.VITE_API_BASE_URL}${url}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -26,9 +26,24 @@ const router = createRouter({
       component: () => import("@/views/Callback.vue")
     },
     {
+      path: '/support',
+      name: 'support',
+      component: () => import("@/views/Support.vue")
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: () => import("@/views/Error.vue")
+    },
+    {
       path: '/assignedTasks',
       name: 'assignedTask-list',
       component: () => import("@/views/AssignedTaskTable.vue")
+    },
+    {
+      path: '/tasks',
+      name: 'task-list',
+      component: () => import("@/views/Task/TaskList.vue")
     },
     {
       path: "/persons",
@@ -53,7 +68,25 @@ const router = createRouter({
       name: "task-create",
       component: () => import("@/views/Task/TaskCreate.vue"),
       beforeEnter: authGuard
-    }
+    },
+    {
+      path: "/targetTypes",
+      name: "targetType-list",
+      component: () => { return import("@/views/TargetType/TargetTypeList.vue") }, 
+      beforeEnter: authGuard
+    },
+    {
+      path: "/targets",
+      name: "target-list",
+      component: () => { return import("@/views/Target/TargetList.vue") }, 
+      beforeEnter: authGuard
+    },
+    {
+      path: "/taskTypes",
+      name: "taskType-list",
+      component: () => { return import("@/views/TaskType/TaskTypeList.vue") }, 
+      beforeEnter: authGuard
+    },
   ],
 });
 

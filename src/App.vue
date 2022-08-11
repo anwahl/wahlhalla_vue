@@ -23,7 +23,7 @@ export default  {
         return {
             menu: [
               {
-                  header: "Tasks",
+                  header: "Wahlhalla",
                   hiddenOnCollapse: true
               },
               {
@@ -31,7 +31,7 @@ export default  {
                   title: 'Dashboard',
                   icon: {
                       element: 'img',
-                      attributes: {src: "src/assets/images/WAHLHALLA-W.png"}
+                      attributes: {src: "/images/WAHLHALLA-W.png"}
                       // text: ''
                   }
               },
@@ -45,9 +45,29 @@ export default  {
                       icon: 'bi bi-list-task',
                   },
                   {
+                      href: '/tasks',
+                      title: 'Tasks',
+                      icon: 'bi bi-hexagon-fill',
+                  },
+                  {
                       href: '/persons',
                       title: 'People',
                       icon: 'bi bi-people',
+                  },
+                  {
+                      href: '/targets',
+                      title: 'Targets',
+                      icon: 'bi bi-bullseye',
+                  },
+                  {
+                      href: '/targetTypes',
+                      title: 'Target Types',
+                      icon: 'bi bi-bullseye',
+                  },
+                  {
+                      href: '/taskTypes',
+                      title: 'Task Types',
+                      icon: 'bi bi-hexagon',
                   }
                   ]
               },
