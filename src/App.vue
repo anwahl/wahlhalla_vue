@@ -32,12 +32,17 @@ export default  {
               },
               {
                   href: '/',
-                  title: 'Dashboard',
+                  title: 'Home',
                   icon: {
                       element: 'img',
                       attributes: {src: "/images/WAHLHALLA-W.png"}
                       // text: ''
                   }
+              },
+              {
+                  href: '/dashboard',
+                  title: 'Dashboard',
+                  icon: 'bi bi-checklist'
               },
               {
                   title: 'View',
@@ -126,6 +131,7 @@ export default  {
         this.onResize();
         // @ts-ignore
         window.addEventListener('resize', this.onResize);
+        // @ts-ignore
         this.isLoading = false;
     }
 }
