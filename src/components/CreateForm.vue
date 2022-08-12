@@ -33,16 +33,18 @@
           name="{{ prop.name }}"
           v-if="prop.type == 'inputNumber'"
         />
-        <Datepicker
+        <Datepicker :enableTimePicker="false" autoApply 
           id="{{ prop.name }}"
-          :is-required="prop.required ? true : false"
+          :required="prop.required ? true : false"
           v-model="object[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputDate'" />
-
-          <Datepicker timePicker confirm="true" 
+        
+          <Datepicker timePicker
+          id="{{ prop.name }}"
           :required="prop.required ? true : false"
           v-model="object[prop.name]"
+          name="{{ prop.name }}"
           v-if="prop.type == 'inputTime'" />
         
         <label class="checkboxContainer" v-if="prop.type == 'inputCheck'">
@@ -99,7 +101,25 @@ export default  {
             // @ts-ignore
             if (element.type == "inputTime" && this.object[element.name] != null && this.object[element.name] != undefined) {
               // @ts-ignore
-              data[element.name] = `${this.object[element.name].HH}:${this.object[element.name].mm}`;
+              let hours, minutes;
+              // @ts-ignore
+              if (this.object[element.name].hours < 10) {
+                // @ts-ignore
+                hours = '0' +  this.object[element.name].hours;
+              }else {
+                // @ts-ignore
+                hours = this.object[element.name].hours;
+              }
+              // @ts-ignore
+              if (this.object[element.name].minutes < 10) {
+                // @ts-ignore
+                minutes = '0' +  this.object[element.name].minutes;
+              } else {
+                // @ts-ignore
+                minutes = this.object[element.name].minutes;
+              }
+              // @ts-ignore
+              data[element.name] = `${hours}:${minutes}`;
               // @ts-ignore
             } else if (element.type == "inputCheck" && this.object[element.name] == null){
               // @ts-ignore

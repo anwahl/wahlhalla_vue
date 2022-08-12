@@ -31,17 +31,18 @@
           name="{{ prop.name }}"
           v-if="prop.type == 'inputNumber'"
          />
-        <Datepicker :enableTimePicker="false" autoApply
+        <Datepicker :enableTimePicker="false" autoApply 
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
           v-model="this.currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputDate'"
         />
-        <Datepicker timePicker autoApply
+        <Datepicker timePicker
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
           v-model="this.currentObject[prop.name]"
+          :value="this.currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputTime'"
            />
@@ -99,7 +100,7 @@ export default {
   data() {
     let currentObject = { id: null };
     this.objectProps.forEach((element) => {
-        currentObject[element.name] = null
+      currentObject[element.name] = null
     });
     return {
         currentObject: null,
@@ -110,11 +111,27 @@ export default {
     async getObject(id) {
       var accessToken = await auth0.getTokenSilently();
       this.currentObject = await GET(`${this.objectURL}/${id}`, accessToken);
+      for (const element in this.currentObject) {
+        if (new RegExp("^[0-9]{2}:[0-9]{2}:00$").test(this.currentObject[element])) {
+          this.currentObject[element] = {hours: this.currentObject[element].split(':')[0], minutes: this.currentObject[element].split(':')[1]};
+        }
+      };
     },
     async updateObject(id) {
       this.objectProps.forEach((element) => {
         if (element.type == "inputTime" && this.currentObject[element.name] != null && this.currentObject[element.name] != undefined) {
-          this.currentObject[element.name] = `${this.currentObject[element.name].HH}:${this.currentObject[element.name].mm}`;
+          let hours, minutes;
+          if (this.currentObject[element.name].hours < 10) {
+            hours = '0' +  this.currentObject[element.name].hours;
+          }else {
+            hours = this.currentObject[element.name].hours;
+          }
+          if (this.currentObject[element.name].minutes < 10) {
+            minutes = '0' +  this.currentObject[element.name].minutes;
+          } else {
+            minutes = this.currentObject[element.name].minutes;
+          }
+          this.currentObject[element.name] = `${hours}:${minutes}`;
         } else if (element.type == "inputCheck" && this.currentObject[element.name] == null){
             this.currentObject[element.name] = false;
         } else {
