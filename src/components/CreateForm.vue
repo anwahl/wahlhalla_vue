@@ -1,5 +1,7 @@
 <template>
-  <div class="submit-form">
+  <div v-if="isLoading"> Loading ... </div>
+  <div v-else="error"> {{ error.message }} <button @click="getUsers">try again</button> </div>
+  <div class="submit-form" v-else>
   <span class="form-title">Add a {{ objectName }}</span>
     <div>
       <div v-for="(prop, index) in objectProps" class="form-group">
@@ -20,7 +22,7 @@
           v-model="object[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputSelect'">
-            <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ item[prop.itemDisplay] }}</option>
+            <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ prop.itemSubOf ? item[prop.itemSubOf][prop.itemDisplay] : item[prop.itemDisplay] }}</option>
         </select>
         <input
           type="number"
@@ -31,19 +33,45 @@
           name="{{ prop.name }}"
           v-if="prop.type == 'inputNumber'"
         />
+        <Datepicker
+          id="{{ prop.name }}"
+          :is-required="prop.required ? true : false"
+          v-model="object[prop.name]"
+          name="{{ prop.name }}"
+          v-if="prop.type == 'inputDate'" />
+
+          <Datepicker timePicker confirm="true" 
+          :required="prop.required ? true : false"
+          v-model="object[prop.name]"
+          v-if="prop.type == 'inputTime'" />
+        
+        <label class="checkboxContainer" v-if="prop.type == 'inputCheck'">
+          <input
+              type="checkbox"
+              id="{{ prop.name }}"
+              :required="prop.required ? true : false"
+              v-model="object[prop.name]"
+              name="{{ prop.name }}"
+            />
+            <span class="checkbox" ></span>
+          </label>
       </div>
       <button @click="saveObject(); $emit('onFormSubmit')" class="btn btn-success">Submit</button>
     </div>
   </div>
 </template>
 <script lang="ts">
+import { ref } from 'vue';
 import {  Vue } from "vue-property-decorator";
 import POST from "@/composables/POST";
 import auth0 from "@/composables/auth0Client";
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 export default  {
   name: "object-create",
   emits: ['onFormSubmit'],
+  components: { Datepicker },
   data() {
     let object = { id: null };
     // @ts-ignore
@@ -69,7 +97,17 @@ export default  {
         // @ts-ignore
         this.objectProps.forEach((element) => {
             // @ts-ignore
-            data[element.name] = this.object[element.name];
+            if (element.type == "inputTime" && this.object[element.name] != null && this.object[element.name] != undefined) {
+              // @ts-ignore
+              data[element.name] = `${this.object[element.name].HH}:${this.object[element.name].mm}`;
+              // @ts-ignore
+            } else if (element.type == "inputCheck" && this.object[element.name] == null){
+              // @ts-ignore
+               data[element.name] = false;
+            } else {
+              // @ts-ignore
+              data[element.name] = this.object[element.name];
+            }
         });
 
         let accessToken = await auth0.getTokenSilently();
@@ -83,6 +121,9 @@ export default  {
             this.object[element.name] = null;
         });
     }
+  },
+  mounted () {
+       
   }
 }
 </script>

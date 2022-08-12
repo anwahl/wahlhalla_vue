@@ -1,6 +1,6 @@
 <template>
   <ListForm
-    objectURL="Task"
+    objectURL="task"
     childComponent='Task'
     childCreateComponent='TaskCreate'
     :objectProps="[{label: 'Description',

@@ -50,6 +50,11 @@ export default  {
                       icon: 'bi bi-hexagon-fill',
                   },
                   {
+                      href: '/subtasks',
+                      title: 'Subasks',
+                      icon: 'bi bi-check-all',
+                  },
+                  {
                       href: '/persons',
                       title: 'People',
                       icon: 'bi bi-people',

@@ -20,8 +20,41 @@
           v-model="this.currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputSelect'">
-            <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ item[prop.itemDisplay] }}</option>
+            <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ prop.itemSubOf ? item[prop.itemSubOf][prop.itemDisplay] : item[prop.itemDisplay] }}</option>
         </select>
+        <input
+          type="number"
+          class="form-control"
+          id="{{ prop.name }}"
+          :required="prop.required ? true : false"
+          v-model="this.currentObject[prop.name]"
+          name="{{ prop.name }}"
+          v-if="prop.type == 'inputNumber'"
+         />
+        <Datepicker :enableTimePicker="false" autoApply
+          id="{{ prop.name }}"
+          :required="prop.required ? true : false"
+          v-model="this.currentObject[prop.name]"
+          name="{{ prop.name }}"
+          v-if="prop.type == 'inputDate'"
+        />
+        <Datepicker timePicker autoApply
+          id="{{ prop.name }}"
+          :required="prop.required ? true : false"
+          v-model="this.currentObject[prop.name]"
+          name="{{ prop.name }}"
+          v-if="prop.type == 'inputTime'"
+           />
+        <label class="checkboxContainer" v-if="prop.type == 'inputCheck'">
+          <input
+              type="checkbox"
+              id="{{ prop.name }}"
+              :required="prop.required ? true : false"
+              v-model="this.currentObject[prop.name]"
+              name="{{ prop.name }}"
+            />
+            <span class="checkbox" ></span>
+          </label>
       </div>
     </form>
     <button type="submit" class="btn btn-primary"
@@ -44,10 +77,16 @@ import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import GET from "@/composables/GET";
 import auth0 from "@/composables/auth0Client";
+import Datepicker from '@vuepic/vue-datepicker';
+import VueTimepicker from 'vue3-timepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import 'vue3-timepicker/dist/VueTimepicker.css'
+
 import { watch } from 'vue';
 export default {
   name: "object-update",
   emits: 'onFormSubmit',
+  components: { Datepicker, VueTimepicker },
   props:{
     objectId: Number,
     objectURL: String,
@@ -73,6 +112,16 @@ export default {
       this.currentObject = await GET(`${this.objectURL}/${id}`, accessToken);
     },
     async updateObject(id) {
+      this.objectProps.forEach((element) => {
+        if (element.type == "inputTime" && this.currentObject[element.name] != null && this.currentObject[element.name] != undefined) {
+          this.currentObject[element.name] = `${this.currentObject[element.name].HH}:${this.currentObject[element.name].mm}`;
+        } else if (element.type == "inputCheck" && this.currentObject[element.name] == null){
+            this.currentObject[element.name] = false;
+        } else {
+          this.currentObject[element.name] = this.currentObject[element.name];
+        }
+      });
+
       var accessToken = await auth0.getTokenSilently();
       await PUT(`${this.objectURL}/${this.currentObject.id}`, accessToken, this.currentObject);
     },

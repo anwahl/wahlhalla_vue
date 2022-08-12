@@ -71,14 +71,99 @@ a,
   border-color: var(--vt-c-purple-mute);
 }
 
-input[type="text"] {
+input[type="text"], input.dp__input, input.vue__time-picker-input, .vue__time-picker .dropdown, div.select-list, input.vue__time-picker input.vue__time-picker-input {
   background-color: var(--vt-c-yellow-extra-soft);
-  border-radius: 10pxp;
+  border-radius: 10px;
+  width: 100%;
+  height: 38px;
+}
+
+span.vue__time-picker {
+  font-size: 1rem;
+  display: block;
+  width: 100%;
+}
+
+input[type="checkbox"] {
+  background-color: var(--vt-c-yellow-extra-soft);
+  margin-left: 25px;
+  transform: scale(1.5);
+}
+input[type="checkbox"]::before {
+  background-color: var(--vt-c-yellow-extra-soft);
 }
 
 select.form-control, select.form-control:focus {
   background-color: var(--vt-c-yellow-extra-soft);
-  border-radius: 10pxp;
+  border-radius: 10px;
+}
+
+.checkboxContainer {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-left: 25px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkboxContainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+/* Create a custom checkbox */
+.checkbox {
+  position: absolute;
+  border-radius: 10px;
+  top: -5px;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: var(--vt-c-yellow-extra-soft);
+}
+
+/* On mouse-over, add a grey background color */
+.checkboxContainer:hover input ~ .checkbox {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkboxContainer input:checked ~ .checkbox {
+  background-color: rgb(147, 87, 169);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkbox:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkboxContainer input:checked ~ .checkbox:after {
+  display: inline-block;
+}
+
+/* Style the checkmark/indicator */
+.checkboxContainer .checkbox:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 15px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .form-title {

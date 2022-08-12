@@ -35,7 +35,9 @@
             <div class="card-body">
                 <ul class="list-group list-group-flush">
                 <li class="list-group-item" v-for="prop in objectProps">
-                    <strong>{{ prop.label }}:</strong> {{ prop.subOf ? this.currentObject[prop.subOf][prop.name] : currentObject[prop.name] }}
+                    <strong>{{ prop.label }}:</strong> {{ prop.subOfSub ?  prop.formatter ? prop.formatter(this.currentObject[prop.subOfSub][prop.subOf][prop.name]) : this.currentObject[prop.subOfSub][prop.subOf][prop.name] 
+                                  : prop.subOf ?  prop.formatter ? prop.formatter(this.currentObject[prop.subOf][prop.name]) : this.currentObject[prop.subOf][prop.name]
+                                  : prop.formatter ? prop.formatter(currentObject[prop.name]) : currentObject[prop.name] }}
                 </li>
                 </ul>
             </div>
@@ -45,7 +47,7 @@
   </div>
 </template>
 <script>
-import {ref, reactive, onMounted} from 'vue';
+import { defineAsyncComponent, ref } from 'vue';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import GET from "@/composables/GET";
 import auth0 from "@/composables/auth0Client";
@@ -60,10 +62,14 @@ import TaskTypeCreate from "@/views/TaskType/TaskTypeCreate.vue";
 import TaskType from "@/views/TaskType/TaskType.vue";
 import TaskCreate from "@/views/Task/TaskCreate.vue";
 import Task from "@/views/Task/Task.vue";
+import AssignedTaskCreate from "@/views/AssignedTask/AssignedTaskCreate.vue";
+import AssignedTask from "@/views/AssignedTask/AssignedTask.vue";
+import SubtaskCreate from "@/views/Subtask/SubtaskCreate.vue";
+import Subtask from "@/views/Subtask/Subtask.vue";
 
 export default {
   name: "objects-list",
-  components: {VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate},
+  components: {VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate, AssignedTask, AssignedTaskCreate, Subtask, SubtaskCreate},
   props: {
     objectURL: String,
     childComponent: String,
@@ -123,7 +129,9 @@ export default {
     this.displayProps.forEach(element =>  {
         columns.push({
             title: element.label,
-            field: element.name
+            field: element.name,
+            formatter: (element.formatter ? element.formatter : "plaintext"),
+            formatterParams: (element.formatterParams ? element.formatterParams : {})
         });
     });
     var accessToken = await auth0.getTokenSilently();

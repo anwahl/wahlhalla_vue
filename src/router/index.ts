@@ -38,12 +38,17 @@ const router = createRouter({
     {
       path: '/assignedTasks',
       name: 'assignedTask-list',
-      component: () => import("@/views/AssignedTaskTable.vue")
+      component: () => import("@/views/AssignedTask/AssignedTaskList.vue")
     },
     {
       path: '/tasks',
       name: 'task-list',
       component: () => import("@/views/Task/TaskList.vue")
+    },
+    {
+      path: '/subtasks',
+      name: 'subtask-list',
+      component: () => import("@/views/Subtask/SubtaskList.vue")
     },
     {
       path: "/persons",

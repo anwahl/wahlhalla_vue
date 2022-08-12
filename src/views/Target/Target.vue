@@ -7,7 +7,7 @@
                 type: 'inputText',
                 required: true},
                 {label: 'Type',
-                name: 'type',
+                name: 'typeId',
                 type: 'inputSelect',
                 required: true,
                 items : this.typeItems,
