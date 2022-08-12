@@ -1,7 +1,5 @@
 <template>
-  <div v-if="isLoading"> Loading ... </div>
-  <div v-else="error"> {{ error.message }} <button @click="getUsers">try again</button> </div>
-  <div class="submit-form" v-else>
+  <div class="submit-form">
   <span class="form-title">Add a {{ objectName }}</span>
     <div>
       <div v-for="(prop, index) in objectProps" class="form-group">

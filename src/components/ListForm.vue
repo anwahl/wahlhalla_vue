@@ -1,6 +1,9 @@
 <template>
+  <div  class="list row">
+    <Loading v-if="isLoading"></Loading>
+  </div>
   <div class="list row">
-    <div class="col-13">
+    <div v-if="!isLoading" class="col-13">
       <div class="input-group mb-3">
         <input type="text" class="form-control" placeholder="Search..."
           v-model="searchValue"/>
@@ -13,7 +16,7 @@
       </div>
     </div>
     <div class="col col-lg-9">
-      <h4>{{ objectName }} List
+      <h4 v-if="!isLoading">{{ objectName }} List
         <vue-final-modal @closed="refreshList" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
             <button class="modal__close" @click="showCreate = false" />
             <component :is="childCreateComponent" @onFormSubmit="showCreate = false" />
@@ -66,10 +69,11 @@ import AssignedTaskCreate from "@/views/AssignedTask/AssignedTaskCreate.vue";
 import AssignedTask from "@/views/AssignedTask/AssignedTask.vue";
 import SubtaskCreate from "@/views/Subtask/SubtaskCreate.vue";
 import Subtask from "@/views/Subtask/Subtask.vue";
+import Loading from "@/components/Loading.vue";
 
 export default {
   name: "objects-list",
-  components: {VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate, AssignedTask, AssignedTaskCreate, Subtask, SubtaskCreate},
+  components: { Loading, VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate, AssignedTask, AssignedTaskCreate, Subtask, SubtaskCreate},
   props: {
     objectURL: String,
     childComponent: String,
@@ -94,7 +98,8 @@ export default {
       showCreate: false,
       showEdit: false,
       tabulator: null,
-      tableData: []
+      tableData: [],
+      isLoading: true
     };
   },
   methods: {
@@ -148,8 +153,8 @@ export default {
     this.tabulator.on('rowClick', (e, row) => {
             this.setActiveObject(row.getData(), row.getIndex());
     });
-
-    console.log(this.currentObject);
+    
+    this.isLoading = false;
   }
 };
 </script>

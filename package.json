@@ -32,6 +32,7 @@
     "tabulator-tables": "^5.3.1",
     "vue": "^3.2.37",
     "vue-class-component": "^8.0.0-rc.1",
+    "vue-content-loader": "^2.0.1",
     "vue-datepicker-next": "^1.0.2",
     "vue-final-modal": "^3.4.4",
     "vue-property-decorator": "^10.0.0-rc.3",

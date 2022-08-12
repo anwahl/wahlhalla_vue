@@ -1,26 +1,30 @@
 <template>
+  <Loading v-if="isLoading"></Loading>
+  <div>
   <nav>
     <SidebarMenu :menu="menu"  @item-click="onItemClick" :collapsed="collapsed"  @update:collapsed="onToggleCollapse"  />
   </nav>
   <main id="main-view" :class="{'collapsed' : collapsed}">
     <router-view />
   </main>
+  </div>
 </template>
 <script lang="ts">
 import {  Vue } from "vue-property-decorator";
 import { SidebarMenu } from 'vue-sidebar-menu';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
 import auth0 from "@/composables/auth0Client";
+import Loading from "@/components/Loading.vue";
 
 export default  {
   name: "App",
-  components: { SidebarMenu },
+  components: { SidebarMenu, Loading },
   setup() {
-    console.log('Loading...');
     return {};
   },
   data() {
         return {
+            isLoading: true,
             menu: [
               {
                   header: "Wahlhalla",
@@ -122,6 +126,7 @@ export default  {
         this.onResize();
         // @ts-ignore
         window.addEventListener('resize', this.onResize);
+        this.isLoading = false;
     }
 }
 export class App extends Vue {
