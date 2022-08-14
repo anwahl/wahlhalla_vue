@@ -1,3 +1,4 @@
+
 <template>
   <Loading v-if="isLoading"></Loading>
   <div>
@@ -5,7 +6,9 @@
     <SidebarMenu :menu="menu"  @item-click="onItemClick" :collapsed="collapsed"  @update:collapsed="onToggleCollapse"  />
   </nav>
   <main id="main-view" :class="{'collapsed' : collapsed}">
-    <router-view />
+    <Suspense>
+        <router-view />
+    </Suspense>
   </main>
   </div>
 </template>
@@ -42,7 +45,7 @@ export default  {
               {
                   href: '/dashboard',
                   title: 'Dashboard',
-                  icon: 'bi bi-checklist'
+                  icon: 'bi bi-calendar-check'
               },
               {
                   title: 'View',
@@ -76,7 +79,7 @@ export default  {
                   {
                       href: '/targetTypes',
                       title: 'Target Types',
-                      icon: 'bi bi-bullseye',
+                      icon: 'bi bi-house',
                   },
                   {
                       href: '/taskTypes',

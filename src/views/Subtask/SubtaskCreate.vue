@@ -12,7 +12,8 @@
                 required: true,
                 items : asyncOptions,
                 itemDisplay : 'description',
-                itemSubOf: 'task'}]"
+                itemSubOf: 'task',
+                value: byObjectId}]"
     objectName="Subtask"
   />
 </template>
@@ -35,7 +36,8 @@ export default {
   name: "subtask-create",
   components: { CreateForm },
   props: {
-    objectId: Number
+    objectId: Number,
+    byObjectId: Number
   }
 };
 </script>

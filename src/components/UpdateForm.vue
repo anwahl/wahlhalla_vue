@@ -115,18 +115,23 @@ export default {
         if (new RegExp("^[0-9]{2}:[0-9]{2}:00$").test(this.currentObject[element])) {
           this.currentObject[element] = {hours: this.currentObject[element].split(':')[0], minutes: this.currentObject[element].split(':')[1]};
         }
+        if (new RegExp("^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$").test(this.currentObject[element])) {
+          let date = new Date(this.currentObject[element]);
+          date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 8) ? date.getDate() + 1 : ('0' + date.getDate() + 1 )) + '/' + date.getFullYear();
+          this.currentObject[element] = date;
+        }
       };
     },
     async updateObject(id) {
       this.objectProps.forEach((element) => {
         if (element.type == "inputTime" && this.currentObject[element.name] != null && this.currentObject[element.name] != undefined) {
           let hours, minutes;
-          if (this.currentObject[element.name].hours < 10) {
+          if (this.currentObject[element.name].hours < 10 && this.currentObject[element.name].hours[0] != '0') {
             hours = '0' +  this.currentObject[element.name].hours;
           }else {
             hours = this.currentObject[element.name].hours;
           }
-          if (this.currentObject[element.name].minutes < 10) {
+          if (this.currentObject[element.name].minutes < 10 && this.currentObject[element.name].minutes[0] != '0') {
             minutes = '0' +  this.currentObject[element.name].minutes;
           } else {
             minutes = this.currentObject[element.name].minutes;

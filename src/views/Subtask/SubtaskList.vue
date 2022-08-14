@@ -1,6 +1,6 @@
 <template>
   <ListForm
-    objectURL="subtask"
+    :objectURL="'subtask'+ (this.byAssignedTask ? '/assignedTask/' + byAssignedTask : '')"
     childComponent='Subtask'
     childCreateComponent='SubtaskCreate'
     :objectProps="[{label : 'Description', name : 'description'},
@@ -13,6 +13,7 @@
                     name : 'assignedTask.task.description'}]"
     searchByURL='description'
     objectName="Subtask"
+    :byObjectId="this.byAssignedTask"
   />
 </template>
 <script>
@@ -20,6 +21,9 @@ import ListForm from "@/components/ListForm.vue";
 
 export default {
   name: "subtask-list",
-  components: { ListForm }
+  components: { ListForm },
+  props: {
+    byAssignedTask: Number
+  }
 };
 </script>

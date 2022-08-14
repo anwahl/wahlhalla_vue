@@ -279,3 +279,13 @@ select.form-control, select.form-control:focus {
   background-color: var(--color-background-soft);
   color: white;
 }
+
+.green-event > div {
+  background-color: rgb(127, 255, 155);
+}
+
+
+.red-event > div {
+  background-color: rgb(221, 120, 120);
+}
+

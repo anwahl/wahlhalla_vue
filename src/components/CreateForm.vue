@@ -36,14 +36,16 @@
           :required="prop.required ? true : false"
           v-model="object[prop.name]"
           name="{{ prop.name }}"
-          v-if="prop.type == 'inputDate'" />
+          v-if="prop.type == 'inputDate'"
+          :value="prop.value" />
         
           <Datepicker timePicker
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
           v-model="object[prop.name]"
           name="{{ prop.name }}"
-          v-if="prop.type == 'inputTime'" />
+          v-if="prop.type == 'inputTime'"
+           />
         
         <label class="checkboxContainer" v-if="prop.type == 'inputCheck'">
           <input
@@ -77,7 +79,11 @@ export default  {
     // @ts-ignore
     this.objectProps.forEach((element) => {
         // @ts-ignore
-        object[element.name] = null
+        if (element.value != null) {
+          object[element.name] = element.value;
+        } else {
+          object[element.name] = null
+        }
     });
     return {
         object

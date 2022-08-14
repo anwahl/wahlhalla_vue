@@ -1,65 +1,54 @@
+<template>
+ <div  class="list row">
+    <Loading v-if="isLoading"></Loading>
+  </div>
+  <div style="" v-if="!isLoading">
+    <ViewButton v-for="(cat, index) in categories" :item="cat.name" @viewEvent="viewCategory(cat)" />
+  </div>
+  <div style="" v-if="!isLoading">
+    <h4>{{ categoryName }}</h4>
+    <Calendar v-if="renderCalendar" @updateEvents="forceRerender" :category="category" />
+  </div>
+</template>
+ 
 <script>
-import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
-import "../../node_modules/vue-simple-calendar/dist/style.css"
-import "../../node_modules/vue-simple-calendar/static/css/default.css"
-import auth0 from "@/composables/auth0Client";
-import GET from "@/composables/GET";
+import Calendar from "@/components/Calendar.vue";
+import ViewButton from "@/components/buttons/ViewButton.vue";
+import Loading from "@/components/Loading.vue";
 
 export default {
-    name: 'dashboard',
-    data: function() {
-        return { 
-            showDate: new Date(),
-            events: [],
-            assignedTasks: {
-                type: Array,
-                default: []
-            },
-        }
-    },
-    components: {
-        CalendarView,
-        CalendarViewHeader,
-    },
-    methods: {
-        setShowDate(d) {
-            this.showDate = d;
-        },
-        async getAssignedTasks() {
-            var accessToken = await auth0.getTokenSilently();
-            this.assignedTasks = await GET("assignedTask", accessToken);
-            return this.assignedTasks;
-        }
-    },
-    async mounted () {
-        let event = {};
-        this.assignedTasks = await this.getAssignedTasks();
-        for (const element in this.assignedTasks) {
-            console.log(this.assignedTasks[element]);
-            event.id = this.assignedTasks[element].id;
-            event.startDate = new Date(this.assignedTasks[element].dueDate).toISOString();// + " " + this.assignedTasks[element].timeOfDay;
-            event.title = this.assignedTasks[element].task.description;
-            this.events.push(event);
-        };
+  name: 'dashboard',
+  components: { Calendar, ViewButton, Loading },
+  data () {
+    return {
+        isLoading: true,
+        category: 'ASSIGNEDTASK',
+        categoryName: 'All',
+        renderCalendar: true,
+        categories: [{name: 'All', category: 'ASSIGNEDTASK'},
+                     {name: 'Appointments', category: 'APPOINTMENT'},
+                     {name: 'Bills', category: 'BILL'},
+                     {name: 'Chores', category: 'CHORE'},
+                     {name: 'Lists', category: 'LIST'},
+                     {name: 'Other', category: 'OTHER'}],
     }
+  },
+  methods: {
+    viewCategory (cat) {
+        this.category = cat.category;
+        this.categoryName = cat.name;
+        this.forceRerender();
+    },
+    async forceRerender() {
+      this.renderCalendar = false;
+      this.isLoading = true;
+      await this.$nextTick();
+      this.renderCalendar = true;
+      this.isLoading = false;
+    }
+  },
+  mounted () {
+    this.isLoading = false;
+  }
 }
 </script>
-
-<template>
-  <div id="app">
-		<h1>My Calendar</h1>
-		<calendar-view
-			:show-date="showDate"
-			class="theme-default"
-            :events="this.events"
-            
-            >
-			<template #header="{ headerProps }">
-				<calendar-view-header
-					:header-props="headerProps"
-					@input="setShowDate" 
-                    />
-			</template>
-		</calendar-view>
-	</div>
-</template>

@@ -23,15 +23,21 @@
                     {label: 'Due Date',
                     name: 'dueDate',
                     type: 'inputDate',
-                    required: true},
-                    {label: 'Time',
+                    required: true,
+                    value: this.onDate},
+                    {label: 'Start Time',
                     name: 'timeOfDay',
+                    type: 'inputTime',
+                    required: false,
+                    value: this.atTime},
+                    {label: 'End Time',
+                    name: 'endTimeOfDay',
                     type: 'inputTime',
                     required: false},
                     {label: 'Complete',
                     name: 'complete',
                     type: 'inputCheck'}]"
-    objectName="assignedTask"
+    objectName="Assigned Task"
   />
 </template>
 <script>
@@ -41,6 +47,10 @@ import GET from "@/composables/GET";
 
 export default {
   name: "assignedTask-create",
+  props: {
+    onDate: String,
+    atTime: String
+  },
   components: { CreateForm },
   data () {
     return {
