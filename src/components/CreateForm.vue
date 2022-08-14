@@ -80,8 +80,10 @@ export default  {
     this.objectProps.forEach((element) => {
         // @ts-ignore
         if (element.value != null) {
+          // @ts-ignore
           object[element.name] = element.value;
         } else {
+          // @ts-ignore
           object[element.name] = null
         }
     });

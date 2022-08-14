@@ -15,16 +15,6 @@ const router = createRouter({
       component: () => { return import("@/views/Dashboard.vue") }
     },
     {
-      path: "/login",
-      name: "login",
-      component: () => { return import("@/components/LoginButton.vue") }
-    },
-    {
-      path: "/logout",
-      name: "logout",
-      component: () => import("@/components/LogoutButton.vue")
-    },
-    {
       path: '/callback',
       name: 'callback',
       component: () => import("@/views/Callback.vue")
