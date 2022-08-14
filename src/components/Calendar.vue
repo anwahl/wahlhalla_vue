@@ -208,26 +208,26 @@ export default {
                         class="" />
     </div>
     <div class="col col-lg-4" > 
-        <span v-if="this.currentAssignedTask">
+        <span v-if="currentAssignedTask">
             <vue-final-modal @closed="refreshList" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showEdit = false" />
-                <AssignedTask :objectId="this.currentAssignedTask.id"  @onFormSubmit="showEdit = false" />
+                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false" />
             </vue-final-modal>
             <button class="btn btn-primary" @click="showEdit= true">Edit</button>
             <vue-final-modal @closed="refreshList" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSubtasks = false" />
-                <component :is="SubtaskList" :byAssignedTask="this.currentAssignedTask.id" />
+                <component :is="SubtaskList" :byAssignedTask="currentAssignedTask.id" />
             </vue-final-modal>
             <button class="btn btn-secondary" @click="showSubtasks= true">Subtasks</button>
-            <button class="btn btn-primary" v-if="this.currentAssignedTask['complete'] != true" @click="complete(true)">Complete</button>
+            <button class="btn btn-primary" v-if="currentAssignedTask['complete'] != true" @click="complete(true)">Complete</button>
             <button class="btn btn-primary" v-else @click="complete(false)">Incomplete</button>
             <div class="card">
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                     <li class="list-group-item" v-for="prop in objectProps">
-                        <strong>{{ prop.label }}:</strong> {{ prop.subOfSub ?  prop.formatter ? prop.formatter(this.currentAssignedTask[prop.subOfSub][prop.subOf][prop.name]) : this.currentAssignedTask[prop.subOfSub][prop.subOf][prop.name] 
-                                    : prop.subOf ?  prop.formatter ? prop.formatter(this.currentAssignedTask[prop.subOf][prop.name]) : this.currentAssignedTask[prop.subOf][prop.name]
-                                    : prop.formatter ? prop.formatter(this.currentAssignedTask[prop.name]) : this.currentAssignedTask[prop.name] }}
+                        <strong>{{ prop.label }}:</strong> {{ prop.subOfSub ?  prop.formatter ? prop.formatter(currentAssignedTask[prop.subOfSub][prop.subOf][prop.name]) : currentAssignedTask[prop.subOfSub][prop.subOf][prop.name] 
+                                    : prop.subOf ?  prop.formatter ? prop.formatter(currentAssignedTask[prop.subOf][prop.name]) : currentAssignedTask[prop.subOf][prop.name]
+                                    : prop.formatter ? prop.formatter(currentAssignedTask[prop.name]) : currentAssignedTask[prop.name] }}
                     </li>
                     </ul>
                 </div>

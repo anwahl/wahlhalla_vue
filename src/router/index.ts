@@ -12,7 +12,8 @@ const router = createRouter({
     {
       path: "/dashboard",
       name: "dashboard",
-      component: () => { return import("@/views/Dashboard.vue") }
+      component: () => { return import("@/views/Dashboard.vue") }, 
+      beforeEnter: authGuard
     },
     {
       path: '/callback',
@@ -32,17 +33,20 @@ const router = createRouter({
     {
       path: '/assignedTasks',
       name: 'assignedTask-list',
-      component: () => import("@/views/AssignedTask/AssignedTaskList.vue")
+      component: () => import("@/views/AssignedTask/AssignedTaskList.vue"), 
+      beforeEnter: authGuard
     },
     {
       path: '/tasks',
       name: 'task-list',
-      component: () => import("@/views/Task/TaskList.vue")
+      component: () => import("@/views/Task/TaskList.vue"), 
+      beforeEnter: authGuard
     },
     {
       path: '/subtasks',
       name: 'subtask-list',
-      component: () => import("@/views/Subtask/SubtaskList.vue")
+      component: () => import("@/views/Subtask/SubtaskList.vue"), 
+      beforeEnter: authGuard
     },
     {
       path: "/persons",
