@@ -9,7 +9,7 @@
           class="form-control"
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
-          v-model="this.currentObject[prop.name]"
+          v-model="currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputText'"
         />
@@ -17,7 +17,7 @@
           class="form-control"
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
-          v-model="this.currentObject[prop.name]"
+          v-model="currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputSelect'">
             <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ prop.itemSubOf ? item[prop.itemSubOf][prop.itemDisplay] : item[prop.itemDisplay] }}</option>
@@ -27,22 +27,22 @@
           class="form-control"
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
-          v-model="this.currentObject[prop.name]"
+          v-model="currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputNumber'"
          />
         <Datepicker :enableTimePicker="false" autoApply 
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
-          v-model="this.currentObject[prop.name]"
+          v-model="currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputDate'"
         />
         <Datepicker timePicker
           id="{{ prop.name }}"
           :required="prop.required ? true : false"
-          v-model="this.currentObject[prop.name]"
-          :value="this.currentObject[prop.name]"
+          v-model="currentObject[prop.name]"
+          :value="currentObject[prop.name]"
           name="{{ prop.name }}"
           v-if="prop.type == 'inputTime'"
            />
@@ -51,7 +51,7 @@
               type="checkbox"
               id="{{ prop.name }}"
               :required="prop.required ? true : false"
-              v-model="this.currentObject[prop.name]"
+              v-model="currentObject[prop.name]"
               name="{{ prop.name }}"
             />
             <span class="checkbox" ></span>
@@ -59,7 +59,7 @@
       </div>
     </form>
     <button type="submit" class="btn btn-primary"
-      @click="updateObject(this.currentObject.id); $emit('onFormSubmit')">
+      @click="updateObject(currentObject.id); $emit('onFormSubmit')">
       Update
     </button>
     <button class="btn btn-secondary"

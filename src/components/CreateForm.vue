@@ -109,7 +109,7 @@ export default  {
               // @ts-ignore
               let hours, minutes;
               // @ts-ignore
-              if (this.object[element.name].hours < 10) {
+              if (this.object[element.name].hours < 10 && this.object[element.name].hours[0] != '0') {
                 // @ts-ignore
                 hours = '0' +  this.object[element.name].hours;
               }else {
@@ -117,7 +117,7 @@ export default  {
                 hours = this.object[element.name].hours;
               }
               // @ts-ignore
-              if (this.object[element.name].minutes < 10) {
+              if (this.object[element.name].minutes < 10  && this.object[element.name].minutes[0] != '0' ) {
                 // @ts-ignore
                 minutes = '0' +  this.object[element.name].minutes;
               } else {

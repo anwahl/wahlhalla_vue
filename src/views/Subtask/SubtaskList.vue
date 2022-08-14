@@ -1,6 +1,6 @@
 <template>
   <ListForm
-    :objectURL="'subtask'+ (this.byAssignedTask ? '/assignedTask/' + byAssignedTask : '')"
+    :objectURL="'subtask'+ (byAssignedTask ? '/assignedTask/' + byAssignedTask : '')"
     childComponent='Subtask'
     childCreateComponent='SubtaskCreate'
     :objectProps="[{label : 'Description', name : 'description'},
@@ -13,7 +13,7 @@
                     name : 'assignedTask.task.description'}]"
     searchByURL='description'
     objectName="Subtask"
-    :byObjectId="this.byAssignedTask"
+    :byObjectId="byAssignedTask"
   />
 </template>
 <script>

@@ -1,6 +1,6 @@
 <template>
   <CreateForm
-    :objectId="this.objectId"
+    :objectId="objectId"
     objectURL="subtask"
     :objectProps="[{label: 'Description',
                 name: 'description',
