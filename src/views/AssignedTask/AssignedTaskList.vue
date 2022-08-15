@@ -53,7 +53,7 @@
                     name: 'complete',
                     formatter: this.formatCompletionCell}]"
     searchByURL='assignedTask'
-    objectName="AssignedTask"
+    objectName="Assigned Task"
   />
 </template>
 <script>

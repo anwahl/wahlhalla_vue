@@ -65,7 +65,7 @@
                     {label: 'Complete',
                     name: 'complete',
                     type: 'inputCheck'}]"
-    objectName="assignedTask"
+    objectName="Assigned Task"
   />
 </template>
 <script>

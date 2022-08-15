@@ -59,13 +59,14 @@
       </div>
     </form>
     <button type="submit" class="btn btn-primary"
-      @click="updateObject(currentObject.id); $emit('onFormSubmit')">
+      @click="updateObject(currentObject.id);">
       Update
     </button>
     <button class="btn btn-secondary"
-      @click="deleteObject(); $emit('onFormSubmit')">
+      @click="deleteObject();">
       Delete
     </button>
+    <Confirmation ref="confirmDialogue"></Confirmation>
     <p>{{ message }}</p>
   </div>
   <div v-else>
@@ -83,12 +84,13 @@ import VueTimepicker from 'vue3-timepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import 'vue3-timepicker/dist/VueTimepicker.css';
 import dateFunc from 'date-and-time';
+import Confirmation from '../components/Confirmation.vue'
+import { watch, ref } from 'vue';
 
-import { watch } from 'vue';
 export default {
   name: "object-update",
   emits: 'onFormSubmit',
-  components: { Datepicker, VueTimepicker },
+  components: { Datepicker, VueTimepicker, Confirmation },
   props:{
     objectId: Number,
     objectURL: String,
@@ -148,10 +150,20 @@ export default {
 
       var accessToken = await auth0.getTokenSilently();
       await PUT(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken, this.currentObject);
+      this.$emit('onFormSubmit');
     },
     async deleteObject() {
-      var accessToken = await auth0.getTokenSilently();
-      await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken);
+      const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Task(s)',
+                message: 'Are you sure you want to delete the Assigned Task(s)? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+      if (ok) {
+          var accessToken = await auth0.getTokenSilently();
+          await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken);
+          
+          this.$emit('onFormSubmit');
+      }
     }
   },
   mounted() {

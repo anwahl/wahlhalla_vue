@@ -190,9 +190,9 @@ export default {
     <Loading v-if="isLoading"></Loading>
   </div>
   <div  v-if="!isLoading" class="list row" style="width: 70vw;">
-    <vue-final-modal @closed="refreshList" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+    <vue-final-modal v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCreate = false" />
-        <AssignedTaskCreate v-if="showCreate" :onDate="this.onDate" :atTime="this.atTime" @onFormSubmit="showCreate = false" />
+        <AssignedTaskCreate v-if="showCreate" :onDate="this.onDate" :atTime="this.atTime" @onFormSubmit="showCreate = false; refreshList()" />
     </vue-final-modal>
     <div class="col col-lg-8">
         <vue-cal style="height: 80vh; " :events="events" 
@@ -211,14 +211,14 @@ export default {
     </div>
     <div class="col col-lg-4" > 
         <span v-if="currentAssignedTask">
-            <vue-final-modal @closed="refreshList" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+            <vue-final-modal v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showEdit = false" />
-                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false" />
+                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false; refreshList()" />
             </vue-final-modal>
             <button class="btn btn-primary" @click="showEdit= true">Edit</button>
-            <vue-final-modal @closed="refreshList" v-model="showSeriesEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+            <vue-final-modal v-model="showSeriesEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSeriesEdit = false" />
-                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false" />
+                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false; refreshList()" />
             </vue-final-modal>
             <button class="btn btn-secondary" @click="showSeriesEdit= true" v-if="currentAssignedTask.type != 'STANDALONE'">Edit Series</button>
             <vue-final-modal @closed="refreshList" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">

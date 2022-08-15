@@ -6,9 +6,9 @@
     <div class="col col-lg-12" >
       <span v-if="currentObject">
           <h4>{{ objectName }}
-              <vue-final-modal @closed="refreshList" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+              <vue-final-modal v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                   <button class="modal__close" @click="showEdit = false" />
-                  <component :is="childComponent" :objectId="currentObject.id"  @onFormSubmit="showEdit = false" />
+                  <component :is="childComponent" :objectId="currentObject.id"  @onFormSubmit="showEdit = false; refreshList()" />
               </vue-final-modal>
               <button class="btn btn-primary" @click="showEdit = true">Edit</button>
               <button class="btn btn-secondary" @click="currentObject = null">Close</button>
@@ -30,11 +30,11 @@
   <div class="list row list-view">
     <div class="col col-lg-12">
       <h4 v-if="!isLoading">{{ objectName }} List
-        <vue-final-modal @closed="refreshList" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+        <vue-final-modal v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
             <button class="modal__close" @click="showCreate = false" />
-            <component :is="childCreateComponent" @onFormSubmit="showCreate = false" :byObjectId="byObjectId ? byObjectId : ''" />
+            <component :is="childCreateComponent" @onFormSubmit="showCreate = false; refreshList()" :byObjectId="byObjectId ? byObjectId : ''" />
         </vue-final-modal>
-        <button class="btn btn-primary" @click="showCreate = true">Add a {{ objectName }}</button>
+        <button class="btn btn-primary" @click="showCreate = true">Add a{{ (objectName[0].match(/[AEIOUaeiou]/g) ? 'n ' +  objectName : ' ' + objectName)}}</button>
       </h4>
       <div ref="table"></div>
     </div>
