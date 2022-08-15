@@ -46,6 +46,7 @@ export default {
             currentAssignedTask: null,
             showEdit: false,
             showCreate: false,
+            showSeriesEdit: false,
             showSubtasks: false,
             onDate: null,
             atTime: null,
@@ -215,13 +216,16 @@ export default {
                 <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false" />
             </vue-final-modal>
             <button class="btn btn-primary" @click="showEdit= true">Edit</button>
+            <vue-final-modal @closed="refreshList" v-model="showSeriesEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+                <button class="modal__close" @click="showSeriesEdit = false" />
+                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false" />
+            </vue-final-modal>
+            <button class="btn btn-secondary" @click="showSeriesEdit= true" v-if="currentAssignedTask.type != 'STANDALONE'">Edit Series</button>
             <vue-final-modal @closed="refreshList" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSubtasks = false" />
                 <component :is="SubtaskList" :byAssignedTask="currentAssignedTask.id" />
             </vue-final-modal>
-            <button class="btn btn-secondary" @click="showSubtasks= true">Subtasks</button>
-            <button class="btn btn-primary" v-if="currentAssignedTask['complete'] != true" @click="complete(true)">Complete</button>
-            <button class="btn btn-primary" v-else @click="complete(false)">Incomplete</button>
+            <button class="btn btn-primary" @click="showSubtasks= true">Subtasks</button>
             <div class="card">
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
@@ -233,6 +237,8 @@ export default {
                     </ul>
                 </div>
             </div>
+            <button class="btn btn-primary" v-if="currentAssignedTask['complete'] != true" @click="complete(true)">Complete</button>
+            <button class="btn btn-primary" v-else @click="complete(false)">Incomplete</button>
         </span>
     </div>
   </div>

@@ -96,7 +96,8 @@ export default {
       type: Array,
       default: []
     },
-    objectName: String
+    objectName: String,
+    inSeries: false
   },
   data() {
     let currentObject = { id: null };
@@ -146,11 +147,11 @@ export default {
       });
 
       var accessToken = await auth0.getTokenSilently();
-      await PUT(`${this.objectURL}/${this.currentObject.id}`, accessToken, this.currentObject);
+      await PUT(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken, this.currentObject);
     },
     async deleteObject() {
       var accessToken = await auth0.getTokenSilently();
-      await DELETE(`${this.objectURL}/${this.currentObject.id}`, accessToken);
+      await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken);
     }
   },
   mounted() {
