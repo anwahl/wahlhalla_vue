@@ -4,6 +4,8 @@ export default interface AssignedTask {
     task: number;
     type: string;
     timeOfDay: Date;
+    endTimeOfDay: Date;
     dueDate: Date;
+    ocurrences: Number;
     complete: boolean;
   }

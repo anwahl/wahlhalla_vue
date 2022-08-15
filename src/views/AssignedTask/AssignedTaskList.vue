@@ -25,6 +25,8 @@
                     {label: 'End Time',
                     name: 'endTimeOfDay',
                     formatter: this.formatTime},
+                    {label: 'Occurrences',
+                    name: 'occurrences'},
                     {label: 'Value',
                     name: 'value',
                     subOf: 'task',

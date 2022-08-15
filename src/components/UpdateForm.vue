@@ -81,7 +81,8 @@ import auth0 from "@/composables/auth0Client";
 import Datepicker from '@vuepic/vue-datepicker';
 import VueTimepicker from 'vue3-timepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import 'vue3-timepicker/dist/VueTimepicker.css'
+import 'vue3-timepicker/dist/VueTimepicker.css';
+import dateFunc from 'date-and-time';
 
 import { watch } from 'vue';
 export default {
@@ -116,8 +117,8 @@ export default {
           this.currentObject[element] = {hours: this.currentObject[element].split(':')[0], minutes: this.currentObject[element].split(':')[1]};
         }
         if (new RegExp("^[0-9]{4}\-[0-9]{2}\-[0-9]{2}$").test(this.currentObject[element])) {
-          let date = new Date(this.currentObject[element]);
-          date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 8) ? date.getDate() + 1 : ('0' + date.getDate() + 1 )) + '/' + date.getFullYear();
+          let date = dateFunc.addHours(new Date(this.currentObject[element]), 6); //Timezone issues?
+          date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? (date.getDate()) : ('0' + (date.getDate()))) + '/' + date.getFullYear();
           this.currentObject[element] = date;
         }
       };

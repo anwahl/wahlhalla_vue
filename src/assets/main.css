@@ -71,7 +71,7 @@ a,
   border-color: var(--vt-c-purple-mute);
 }
 
-input[type="text"], input.dp__input {
+input[type="text"], input.dp__input, input[type="number"] {
   background-color: var(--vt-c-yellow-extra-soft);
   border-radius: 10px;
   width: 100%;

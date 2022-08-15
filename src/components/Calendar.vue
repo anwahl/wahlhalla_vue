@@ -32,6 +32,7 @@ import AssignedTaskCreate from "@/views/AssignedTask/AssignedTaskCreate.vue";
 import Loading from "@/components/Loading.vue";
 import * as formatter from "@/composables/cellFormatter.js";
 import PUT from "@/composables/PUT";
+import dateFunc from 'date-and-time';
 
 export default {
     name: 'calendar',
@@ -168,8 +169,8 @@ export default {
                 }
                 this.currentAssignedTask['endTimeOfDay'] = `${hours}:${minutes}`;
             }
-            let date = new Date(this.currentAssignedTask['dueDate']);
-            date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 8) ? date.getDate() + 1 : ('0' + date.getDate() + 1 )) + '/' + date.getFullYear();
+            let date = dateFunc.addHours(new Date(this.currentAssignedTask['dueDate']), 6);
+            date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
             this.currentAssignedTask['dueDate'] = date;
 
             var accessToken = await auth0.getTokenSilently();
