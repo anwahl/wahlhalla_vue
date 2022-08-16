@@ -1,12 +1,12 @@
 <template>
-    <form class="submit-form">
+    <form @submit.prevent="validateForm" class="submit-form">
     <span class="form-title">{{ action }} {{ objectName }}</span>
     <div class="errors" v-if="errors.length > 0"><span v-for="error in errors">{{ error.message }}</span></div>
       <div v-for="(prop, index) in objectProps" class="form-group">
         <label :class="prop.required ? 'required-field' : ''" for="{{ prop.name }}">{{ prop.label }}</label>
         <Input :prop="prop" :object="object" ></Input>
       </div>
-    <button class="btn btn-primary"  @click="validateForm">{{ action }}</button>
+    <button class="btn btn-primary"  type="submit" >{{ action }}</button>
   </form>
 </template>
 <script>
