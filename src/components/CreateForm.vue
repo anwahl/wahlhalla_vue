@@ -1,5 +1,5 @@
 <template>
-  <Form :object="object" action="Create" :onSubmit="saveObject" :objectProps="objectProps" :objectName="objectName"></Form>
+  <Form :object="object" action="Create" @doOnSubmit="saveObject" :objectProps="objectProps" :objectName="objectName"></Form>
 </template>
 <script lang="ts">
 import Form from "@/components/Form.vue";
@@ -87,7 +87,7 @@ export default  {
               this.object[element.name] = null;
           });
           // @ts-ignore
-          this.$emit('onFormSubmit')
+          this.$emit('onFormSubmit');
     }
   },
   mounted () {
