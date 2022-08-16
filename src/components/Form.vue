@@ -28,8 +28,6 @@ export default {
             default: []
         },
         object: {
-            type: Array,
-            default: []
         },
     },
     data() {

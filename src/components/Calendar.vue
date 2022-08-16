@@ -2,7 +2,7 @@
 import useAsyncOptions from '@/composables/useAsyncOptions';
 import auth0 from "@/composables/auth0Client";
 import GET from "@/composables/GET";
-import { defineProps, reactive, toRefs } from "vue";
+import { reactive, toRefs } from "vue";
 const props = defineProps({
   category: String,
 });
@@ -195,7 +195,7 @@ export default {
   <div  v-if="!isLoading" class="list row" style="width: 70vw;">
     <vue-final-modal v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCreate = false" />
-        <AssignedTaskCreate v-if="showCreate" :onDate="this.onDate" :atTime="this.atTime" @onFormSubmit="showCreate = false; refreshList()" />
+        <AssignedTaskCreate v-if="showCreate" :onDate="onDate" :atTime="atTime" @onFormSubmit="showCreate = false; refreshList()" />
     </vue-final-modal>
     <div class="col col-lg-8">
         <vue-cal style="height: 80vh; " :events="events" 
