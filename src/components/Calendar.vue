@@ -43,6 +43,7 @@ export default {
     },
     data: function() {
         return { 
+            isLoading: true,
             showDate: new Date(),
             currentAssignedTask: null,
             showEdit: false,

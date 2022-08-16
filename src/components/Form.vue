@@ -6,7 +6,7 @@
         <label :class="prop.required ? 'required-field' : ''" for="{{ prop.name }}">{{ prop.label }}</label>
         <Input :prop="prop" :object="object" ></Input>
       </div>
-    <button type="submit" class="btn btn-primary"  @submit.prevent="validateForm">{{ action }}</button>
+    <button class="btn btn-primary"  @submit.prevent="validateForm">{{ action }}</button>
   </form>
 </template>
 <script>
