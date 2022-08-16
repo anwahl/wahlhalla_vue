@@ -1,7 +1,6 @@
 import { createApp, defineAsyncComponent } from "vue";
 import LoadingComponent from "@/components/Loading.vue";
 import ErrorComponent from "@/components/Error.vue";
-import BootstrapVue3 from 'bootstrap-vue-3'
 import { createAuth0 } from '@auth0/auth0-vue';
 import App from "@/App.vue";
 import router from "./router";
@@ -20,7 +19,6 @@ app
             audience: import.meta.env.VITE_AUDIENCE
         })
     )
-    .use(BootstrapVue3)
     .component("ErrorComponent", ErrorComponent)
     .component("LoadingComponent", LoadingComponent)
     .mount("#app");

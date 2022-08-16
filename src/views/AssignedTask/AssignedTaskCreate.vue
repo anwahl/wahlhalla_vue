@@ -1,7 +1,7 @@
 <template>
   <CreateForm
     objectURL="assignedTask"
-    :objectProps="[{label: 'Person',
+    :objectProps="[{label: 'Assigned Person',
                     name: 'personId',
                     type: 'inputSelect',
                     items : this.personItems,
@@ -17,21 +17,31 @@
                     {label: 'Type',
                     name: 'type',
                     type: 'inputSelect',
-                    items : [{name: 'DAILY'},{name: 'WEEKLY'},{name: 'MONTHLY'},{name: 'YEARLY'}],
+                    items : [{name: 'DAILY'},{name: 'WEEKLY'},{name: 'MONTHLY'},{name: 'YEARLY'},{name: 'STANDALONE'}],
                     itemDisplay : 'name',
                     required: true},
                     {label: 'Due Date',
                     name: 'dueDate',
                     type: 'inputDate',
-                    required: true},
-                    {label: 'Time',
+                    required: true,
+                    value: this.onDate},
+                    {label: 'Start Time',
                     name: 'timeOfDay',
                     type: 'inputTime',
+                    required: false,
+                    value: this.atTime},
+                    {label: 'End Time',
+                    name: 'endTimeOfDay',
+                    type: 'inputTime',
+                    required: false},
+                    {label: 'Occurrences',
+                    name: 'occurrences',
+                    type: 'inputNumber',
                     required: false},
                     {label: 'Complete',
                     name: 'complete',
                     type: 'inputCheck'}]"
-    objectName="assignedTask"
+    objectName="Assigned Task"
   />
 </template>
 <script>
@@ -41,6 +51,10 @@ import GET from "@/composables/GET";
 
 export default {
   name: "assignedTask-create",
+  props: {
+    onDate: String,
+    atTime: String
+  },
   components: { CreateForm },
   data () {
     return {

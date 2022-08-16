@@ -53,6 +53,14 @@ a,
   color: rgb(42, 40, 43)
 }
 
+form ~ button.btn.delete-btn{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 25px;
+  margin-bottom: 10px;
+}
+
 .modal-container {
   display: flex;
   justify-content: center;
@@ -63,7 +71,7 @@ a,
   background: var(--color-background-soft);
   width: 50%;
   border-radius: 20px;
-  box-shadow: 20px 20px 10px var(--color-background-mute);
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .list-group-item.active {
@@ -71,11 +79,36 @@ a,
   border-color: var(--vt-c-purple-mute);
 }
 
-input[type="text"], input.dp__input, input.vue__time-picker-input, .vue__time-picker .dropdown, div.select-list, input.vue__time-picker input.vue__time-picker-input {
+.errors {
+  color: rgb(255, 0, 0);
+}
+
+.errors > span {
+  display: block;
+  font-weight: bold;
+}
+
+.required-field::before {
+  content: "*";
+  color: rgb(219, 54, 54);
+  padding: .5em;
+  margin-left: -1em;
+}
+
+input[type="text"], input.dp__input, input[type="number"] {
   background-color: var(--vt-c-yellow-extra-soft);
   border-radius: 10px;
   width: 100%;
-  height: 38px;
+  /* height: 38px; */
+}
+
+.dp_timepicker > .dp__instance_calendar, .dp__overlay {
+  display: contents;
+  position: relative;
+}
+
+.dp__calendar:only-child {
+  position: absolute;
 }
 
 span.vue__time-picker {
@@ -270,3 +303,13 @@ select.form-control, select.form-control:focus {
   background-color: var(--color-background-soft);
   color: white;
 }
+
+.green-event > div {
+  background-color: rgb(127, 255, 155);
+}
+
+
+.red-event > div {
+  background-color: rgb(221, 120, 120);
+}
+

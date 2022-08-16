@@ -3,7 +3,7 @@
     objectURL="assignedTask"
     childComponent='AssignedTask'
     childCreateComponent='AssignedTaskCreate'
-    :objectProps="[{label: 'Person',
+    :objectProps="[{label: 'Assigned Person',
                     name: 'firstName',
                     subOf: 'person'},
                     {label: 'Task',
@@ -22,18 +22,21 @@
                     {label: 'Time',
                     name: 'timeOfDay',
                     formatter: this.formatTime},
+                    {label: 'End Time',
+                    name: 'endTimeOfDay',
+                    formatter: this.formatTime},
+                    {label: 'Occurrences',
+                    name: 'occurrences'},
                     {label: 'Value',
                     name: 'value',
                     subOf: 'task',
                     formatter: this.formatMoney},
                     {label: 'Complete',
                     name: 'complete'}]"
-    :displayProps="[{label: 'Person',
+    :displayProps="[{label: 'Assigned Person',
                     name: 'person.firstName'},
                     {label: 'Task',
                     name: 'task.description'},
-                    {label: 'Target',
-                    name: 'task.target.description'},
                     {label: 'Type',
                     name: 'type',
                     formatter: this.formatWordCell},
@@ -50,7 +53,7 @@
                     name: 'complete',
                     formatter: this.formatCompletionCell}]"
     searchByURL='assignedTask'
-    objectName="AssignedTask"
+    objectName="Assigned Task"
   />
 </template>
 <script>

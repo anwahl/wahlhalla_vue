@@ -1,7 +1,8 @@
 <template>
   <UpdateForm
+    :inSeries="inSeries"
     objectURL="assignedTask"
-    :objectProps="[{label: 'Person',
+    :objectProps="!inSeries ? [{label: 'Assigned Person',
                     name: 'personId',
                     type: 'inputSelect',
                     items : this.personItems,
@@ -14,24 +15,47 @@
                     items : this.taskItems,
                     itemDisplay : 'description',
                     required: true},
-                    {label: 'Type',
-                    name: 'type',
-                    type: 'inputSelect',
-                    items : [{name: 'DAILY'},{name: 'WEEKLY'},{name: 'MONTHLY'},{name: 'YEARLY'}],
-                    itemDisplay : 'name',
-                    required: true},
                     {label: 'Due Date',
                     name: 'dueDate',
                     type: 'inputDate',
                     required: true},
-                    {label: 'Time',
+                    {label: 'Start Time',
                     name: 'timeOfDay',
+                    type: 'inputTime',
+                    required: false},
+                    {label: 'End Time',
+                    name: 'endTimeOfDay',
+                    type: 'inputTime',
+                    required: false},
+                    {label: 'Complete',
+                    name: 'complete',
+                    type: 'inputCheck'}]
+                    :
+                    [{label: 'Person',
+                    name: 'personId',
+                    type: 'inputSelect',
+                    items : this.personItems,
+                    itemDisplay : 'firstName',
+                    subOf: 'person'},
+                    {label: 'Task',
+                    name: 'taskId',
+                    type: 'inputSelect',
+                    subOf: 'task',
+                    items : this.taskItems,
+                    itemDisplay : 'description',
+                    required: true},
+                    {label: 'Start Time',
+                    name: 'timeOfDay',
+                    type: 'inputTime',
+                    required: false},
+                    {label: 'End Time',
+                    name: 'endTimeOfDay',
                     type: 'inputTime',
                     required: false},
                     {label: 'Complete',
                     name: 'complete',
                     type: 'inputCheck'}]"
-    objectName="assignedTask"
+    objectName="Assigned Task"
   />
 </template>
 <script>
@@ -42,6 +66,9 @@ import GET from "@/composables/GET";
 export default {
   name: "assignedTask-update",
   components: { UpdateForm },
+  props: {
+    inSeries: false,
+  },
   data () {
     return {
       personItems: {

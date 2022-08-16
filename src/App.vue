@@ -1,26 +1,33 @@
+
 <template>
+  <Loading v-if="isLoading"></Loading>
+  <div>
   <nav>
     <SidebarMenu :menu="menu"  @item-click="onItemClick" :collapsed="collapsed"  @update:collapsed="onToggleCollapse"  />
   </nav>
   <main id="main-view" :class="{'collapsed' : collapsed}">
-    <router-view />
+    <Suspense>
+        <router-view />
+    </Suspense>
   </main>
+  </div>
 </template>
 <script lang="ts">
 import {  Vue } from "vue-property-decorator";
 import { SidebarMenu } from 'vue-sidebar-menu';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
 import auth0 from "@/composables/auth0Client";
+import Loading from "@/components/Loading.vue";
 
 export default  {
   name: "App",
-  components: { SidebarMenu },
+  components: { SidebarMenu, Loading },
   setup() {
-    console.log('Loading...');
     return {};
   },
   data() {
         return {
+            isLoading: true,
             menu: [
               {
                   header: "Wahlhalla",
@@ -28,12 +35,17 @@ export default  {
               },
               {
                   href: '/',
-                  title: 'Dashboard',
+                  title: 'Home',
                   icon: {
                       element: 'img',
                       attributes: {src: "/images/WAHLHALLA-W.png"}
                       // text: ''
                   }
+              },
+              {
+                  href: '/dashboard',
+                  title: 'Dashboard',
+                  icon: 'bi bi-calendar-check'
               },
               {
                   title: 'View',
@@ -67,7 +79,7 @@ export default  {
                   {
                       href: '/targetTypes',
                       title: 'Target Types',
-                      icon: 'bi bi-bullseye',
+                      icon: 'bi bi-house',
                   },
                   {
                       href: '/taskTypes',
@@ -122,6 +134,8 @@ export default  {
         this.onResize();
         // @ts-ignore
         window.addEventListener('resize', this.onResize);
+        // @ts-ignore
+        this.isLoading = false;
     }
 }
 export class App extends Vue {
