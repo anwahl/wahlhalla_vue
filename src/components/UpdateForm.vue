@@ -1,5 +1,5 @@
 <template>
-  <Form v-if="currentObject" :object="currentObject" action="Update" :onSubmit="updateObject" :objectProps="objectProps" :objectName="objectName"></Form>
+  <Form v-if="currentObject" :object="currentObject" action="Update" @doOnSubmit="updateObject" :objectProps="objectProps" :objectName="objectName"></Form>
   <button class="btn btn-secondary delete-btn" @click="deleteObject();">Delete</button>
   <Confirmation ref="confirmDialogue"></Confirmation>
 </template>

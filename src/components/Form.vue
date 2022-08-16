@@ -1,12 +1,12 @@
 <template>
-    <form class="submit-form">
+    <form @submit.prevent="validateForm" class="submit-form">
     <span class="form-title">{{ action }} {{ objectName }}</span>
     <div class="errors" v-if="errors.length > 0"><span v-for="error in errors">{{ error.message }}</span></div>
       <div v-for="(prop, index) in objectProps" class="form-group">
         <label :class="prop.required ? 'required-field' : ''" for="{{ prop.name }}">{{ prop.label }}</label>
         <Input :prop="prop" :object="object" ></Input>
       </div>
-    <button type="submit" class="btn btn-primary"  @click="validateForm">{{ action }}</button>
+    <button class="btn btn-primary"  type="submit" >{{ action }}</button>
   </form>
 </template>
 <script>
@@ -19,7 +19,7 @@ export default {
     components: {
         Input
     },
-    emits: ['onSubmit'],
+    emits: ['doOnSubmit'],
     props: {
         action: String,
         objectName: String,
@@ -39,7 +39,7 @@ export default {
         }
     },
     methods: {
-        validateForm() {
+        validateForm(e) {
             this.errors = [];
             this.objectProps.forEach((prop) => {
             if (prop.required && !this.object[prop.name]){
@@ -49,9 +49,10 @@ export default {
             if (this.errors.length > 0) {
                 return false;
             } else {
-                $emits('onSubmit');
+                this.$emit('doOnSubmit');
                 return true;
             }
+            e.preventDefault();
         }
     }
 }
