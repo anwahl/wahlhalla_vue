@@ -49,7 +49,7 @@ export default {
             if (this.errors.length > 0) {
                 return false;
             } else {
-                this.$emits('onSubmit');
+                $emits('onSubmit');
                 return true;
             }
         }
