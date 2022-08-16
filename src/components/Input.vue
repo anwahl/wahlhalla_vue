@@ -61,14 +61,8 @@ export default {
         Datepicker
     },
     props: {
-        prop: {
-            type: Array,
-            default: []
-        },
-        object: {
-            type: Array,
-            default: []
-        },
+        prop: {},
+        object: {},
     }
 }
 
