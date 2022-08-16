@@ -34,6 +34,7 @@ import ObjectCard from "@/components/ObjectCard.vue";
 import * as formatter from "@/composables/cellFormatter.js";
 import PUT from "@/composables/PUT";
 import dateFunc from 'date-and-time';
+import Confirmation from '../components/Confirmation.vue'
 
 export default {
     name: 'calendar',
@@ -85,7 +86,7 @@ export default {
         }
     },
     components: {
-       VueCal, Loading, VueFinalModal, AssignedTaskCreate, AssignedTask, SubtaskList, ObjectCard
+       VueCal, Loading, VueFinalModal, AssignedTaskCreate, AssignedTask, SubtaskList, ObjectCard, Confirmation
     },
     methods: {
         async onEventClick(event, e) {
@@ -141,46 +142,57 @@ export default {
             this.isLoading = false;
         },
         async complete (complete) {
+            let confirmOptions = {};
+            let ok = false;
             if (complete) {
+                ok = true;
                 this.currentAssignedTask.complete = true;
             } else {
+                confirmOptions = {
+                    title: 'Incomplete Task',
+                    message: `Mark Assigned Task as Incomplete?`,
+                    okButton: 'Mark Incomplete',
+                };
+                ok = await this.$refs.confirmDialogue.show(confirmOptions);
                 this.currentAssignedTask.complete = false;
             }
-            if (this.currentAssignedTask['timeOfDay'] != null) {
-                let hours, minutes;
-                if (this.currentAssignedTask['timeOfDay'].split(':')[0] < 10 && this.currentAssignedTask['timeOfDay'].split(':')[0][0] != '0') {
-                    hours = '0' +  this.currentAssignedTask['timeOfDay'].split(':')[0];
-                }else {
-                    hours = this.currentAssignedTask['timeOfDay'].split(':')[0];
+            if (ok) {
+                if (this.currentAssignedTask['timeOfDay'] != null) {
+                    let hours, minutes;
+                    if (this.currentAssignedTask['timeOfDay'].split(':')[0] < 10 && this.currentAssignedTask['timeOfDay'].split(':')[0][0] != '0') {
+                        hours = '0' +  this.currentAssignedTask['timeOfDay'].split(':')[0];
+                    }else {
+                        hours = this.currentAssignedTask['timeOfDay'].split(':')[0];
+                    }
+                    if (this.currentAssignedTask['timeOfDay'].split(':')[1] < 10 && this.currentAssignedTask['timeOfDay'].split(':')[1][0] != '0') {
+                        minutes = '0' +  this.currentAssignedTask['timeOfDay'].split(':')[1];
+                    } else {
+                        minutes = this.currentAssignedTask['timeOfDay'].split(':')[1];
+                    }
+                    this.currentAssignedTask['timeOfDay'] = `${hours}:${minutes}`;
                 }
-                if (this.currentAssignedTask['timeOfDay'].split(':')[1] < 10 && this.currentAssignedTask['timeOfDay'].split(':')[1][0] != '0') {
-                    minutes = '0' +  this.currentAssignedTask['timeOfDay'].split(':')[1];
-                } else {
-                    minutes = this.currentAssignedTask['timeOfDay'].split(':')[1];
+                if (this.currentAssignedTask['endTimeOfDay'] != null) {
+                    let hours, minutes;
+                    if (this.currentAssignedTask['endTimeOfDay'].split(':')[0] < 10 && this.currentAssignedTask['endTimeOfDay'].split(':')[0][0] != '0') {
+                        hours = '0' +  this.currentAssignedTask['endTimeOfDay'].split(':')[0];
+                    }else {
+                        hours = this.currentAssignedTask['endTimeOfDay'].split(':')[0];
+                    }
+                    if (this.currentAssignedTask['endTimeOfDay'].split(':')[1] < 10 && this.currentAssignedTask['endTimeOfDay'].split(':')[1][0] != '0') {
+                        minutes = '0' +  this.currentAssignedTask['endTimeOfDay'].split(':')[1];
+                    } else {
+                        minutes = this.currentAssignedTask['endTimeOfDay'].split(':')[1];
+                    }
+                    this.currentAssignedTask['endTimeOfDay'] = `${hours}:${minutes}`;
                 }
-                this.currentAssignedTask['timeOfDay'] = `${hours}:${minutes}`;
-            }
-            if (this.currentAssignedTask['endTimeOfDay'] != null) {
-                let hours, minutes;
-                if (this.currentAssignedTask['endTimeOfDay'].split(':')[0] < 10 && this.currentAssignedTask['endTimeOfDay'].split(':')[0][0] != '0') {
-                    hours = '0' +  this.currentAssignedTask['endTimeOfDay'].split(':')[0];
-                }else {
-                    hours = this.currentAssignedTask['endTimeOfDay'].split(':')[0];
-                }
-                if (this.currentAssignedTask['endTimeOfDay'].split(':')[1] < 10 && this.currentAssignedTask['endTimeOfDay'].split(':')[1][0] != '0') {
-                    minutes = '0' +  this.currentAssignedTask['endTimeOfDay'].split(':')[1];
-                } else {
-                    minutes = this.currentAssignedTask['endTimeOfDay'].split(':')[1];
-                }
-                this.currentAssignedTask['endTimeOfDay'] = `${hours}:${minutes}`;
-            }
-            let date = dateFunc.addHours(new Date(this.currentAssignedTask['dueDate']), 6);
-            date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
-            this.currentAssignedTask['dueDate'] = date;
+                let date = dateFunc.addHours(new Date(this.currentAssignedTask['dueDate']), 6);
+                date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
+                this.currentAssignedTask['dueDate'] = date;
 
-            var accessToken = await auth0.getTokenSilently();
-            await PUT(`assignedTask/${this.currentAssignedTask.id}`, accessToken, this.currentAssignedTask);
-            this.$emit('updateEvents');
+                var accessToken = await auth0.getTokenSilently();
+                await PUT(`assignedTask/${this.currentAssignedTask.id}`, accessToken, this.currentAssignedTask);
+                this.$emit('updateEvents');
+            }
         }
     },
     mounted() {
@@ -193,12 +205,12 @@ export default {
   <div  class="list row">
     <Loading v-if="isLoading"></Loading>
   </div>
-  <div  v-if="!isLoading" class="list row" style="width: 70vw;">
+  <div  v-if="!isLoading" class="list row">
     <vue-final-modal v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCreate = false" />
         <AssignedTaskCreate v-if="showCreate" :onDate="onDate" :atTime="atTime" @onFormSubmit="showCreate = false; refreshList()" />
     </vue-final-modal>
-    <div class="col col-lg-8">
+    <div class="">
         <vue-cal style="height: 80vh; " :events="events" 
                         :disable-views="['years', 'year']"
                         :show-all-day-events="true"
@@ -213,7 +225,8 @@ export default {
                         activeView="month"
                         class="" />
     </div>
-    <div class="col col-lg-4" > 
+    <vue-final-modal v-model="currentAssignedTask" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+        <button class="modal__close" @click="currentAssignedTask = false" />
         <span v-if="currentAssignedTask">
             <vue-final-modal v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showEdit = false" />
@@ -234,7 +247,8 @@ export default {
             <button class="btn btn-primary" v-if="currentAssignedTask['complete'] != true" @click="complete(true)">Complete</button>
             <button class="btn btn-primary" v-else @click="complete(false)">Incomplete</button>
         </span>
-    </div>
+        <Confirmation ref="confirmDialogue"></Confirmation>
+    </vue-final-modal>
   </div>
 </template>
 <style scope>
@@ -249,5 +263,11 @@ export default {
 .vuecal__event {
     border-top: 1px solid var(--vt-c-yellow-soft);
     border-bottom: 1px solid var(--vt-c-yellow-soft);
+}
+.list.row {
+    width: fit-content;
+}
+.vuecal {
+    min-width: 600px;
 }
 </style>
