@@ -39,7 +39,7 @@ export default {
         }
     },
     methods: {
-        validateForm() {
+        validateForm(e) {
             this.errors = [];
             this.objectProps.forEach((prop) => {
             if (prop.required && !this.object[prop.name]){
@@ -52,6 +52,7 @@ export default {
                 $emits('onSubmit');
                 return true;
             }
+            e.preventDefault();
         }
     }
 }
