@@ -3,7 +3,7 @@
     objectURL="assignedTask"
     childComponent='AssignedTask'
     childCreateComponent='AssignedTaskCreate'
-    :objectProps="[{label: 'Person',
+    :objectProps="[{label: 'Assigned Person',
                     name: 'firstName',
                     subOf: 'person'},
                     {label: 'Task',
@@ -33,7 +33,7 @@
                     formatter: this.formatMoney},
                     {label: 'Complete',
                     name: 'complete'}]"
-    :displayProps="[{label: 'Person',
+    :displayProps="[{label: 'Assigned Person',
                     name: 'person.firstName'},
                     {label: 'Task',
                     name: 'task.description'},

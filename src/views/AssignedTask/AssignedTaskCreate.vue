@@ -1,7 +1,7 @@
 <template>
   <CreateForm
     objectURL="assignedTask"
-    :objectProps="[{label: 'Person',
+    :objectProps="[{label: 'Assigned Person',
                     name: 'personId',
                     type: 'inputSelect',
                     items : this.personItems,

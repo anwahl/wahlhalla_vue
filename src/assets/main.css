@@ -53,6 +53,14 @@ a,
   color: rgb(42, 40, 43)
 }
 
+form ~ button.btn.delete-btn{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 25px;
+  margin-bottom: 10px;
+}
+
 .modal-container {
   display: flex;
   justify-content: center;
@@ -69,6 +77,22 @@ a,
 .list-group-item.active {
   background: var(--vt-c-purple-soft);
   border-color: var(--vt-c-purple-mute);
+}
+
+.errors {
+  color: rgb(255, 0, 0);
+}
+
+.errors > span {
+  display: block;
+  font-weight: bold;
+}
+
+.required-field::before {
+  content: "*";
+  color: rgb(219, 54, 54);
+  padding: .5em;
+  margin-left: -1em;
 }
 
 input[type="text"], input.dp__input, input[type="number"] {

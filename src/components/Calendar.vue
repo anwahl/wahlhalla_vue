@@ -16,7 +16,7 @@ const events = [];
         start: assignedTasks[element].dueDate + (assignedTasks[element].timeOfDay ?  " " + assignedTasks[element].timeOfDay : ''),
         end: assignedTasks[element].dueDate + (assignedTasks[element].endTimeOfDay ?  " " + assignedTasks[element].endTimeOfDay : ''),
         allDay: (assignedTasks[element].timeOfDay ?  false : true),
-        title : assignedTasks[element].task.description,
+        title : (assignedTasks[element].personId ? ('(' + assignedTasks[element].person.firstName + ' ' + assignedTasks[element].person.lastName + ') ') : '') + assignedTasks[element].task.description,
         class: (assignedTasks[element].complete ? 'green-event' : new Date(assignedTasks[element].dueDate) > new Date() ? '' : 'red-event')
     });
 };
@@ -30,6 +30,7 @@ import AssignedTask from "@/views/AssignedTask/AssignedTask.vue";
 import SubtaskList from "@/views/Subtask/SubtaskList.vue";
 import AssignedTaskCreate from "@/views/AssignedTask/AssignedTaskCreate.vue";
 import Loading from "@/components/Loading.vue";
+import ObjectCard from "@/components/ObjectCard.vue";
 import * as formatter from "@/composables/cellFormatter.js";
 import PUT from "@/composables/PUT";
 import dateFunc from 'date-and-time';
@@ -76,12 +77,14 @@ export default {
                         name: 'value',
                         subOf: 'task',
                         formatter: this.formatMoney},
+                        {label: 'Occurrences',
+                        name: 'occurrences'},
                         {label: 'Complete',
                         name: 'complete'}]
         }
     },
     components: {
-       VueCal, Loading, VueFinalModal, AssignedTaskCreate, AssignedTask, SubtaskList
+       VueCal, Loading, VueFinalModal, AssignedTaskCreate, AssignedTask, SubtaskList, ObjectCard
     },
     methods: {
         async onEventClick(event, e) {
@@ -90,7 +93,7 @@ export default {
         onCellClick(event, e){
             let date = new Date(event);
             this.onDate = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
-            this.atTime = {hours: (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()), minutes: (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())};
+            //this.atTime = {hours: (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()), minutes: (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())};
             this.showCreate = true;
         },
         setActiveAssignedTask(assignedTask) {
@@ -226,17 +229,7 @@ export default {
                 <component :is="SubtaskList" :byAssignedTask="currentAssignedTask.id" />
             </vue-final-modal>
             <button class="btn btn-primary" @click="showSubtasks= true">Subtasks</button>
-            <div class="card">
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                    <li class="list-group-item" v-for="prop in objectProps">
-                        <strong>{{ prop.label }}:</strong> {{ prop.subOfSub ?  prop.formatter ? prop.formatter(currentAssignedTask[prop.subOfSub][prop.subOf][prop.name]) : currentAssignedTask[prop.subOfSub][prop.subOf][prop.name] 
-                                    : prop.subOf ?  prop.formatter ? prop.formatter(currentAssignedTask[prop.subOf][prop.name]) : currentAssignedTask[prop.subOf][prop.name]
-                                    : prop.formatter ? prop.formatter(currentAssignedTask[prop.name]) : currentAssignedTask[prop.name] }}
-                    </li>
-                    </ul>
-                </div>
-            </div>
+            <ObjectCard :objectProps="objectProps" :currentObject="currentAssignedTask" ></ObjectCard>
             <button class="btn btn-primary" v-if="currentAssignedTask['complete'] != true" @click="complete(true)">Complete</button>
             <button class="btn btn-primary" v-else @click="complete(false)">Incomplete</button>
         </span>

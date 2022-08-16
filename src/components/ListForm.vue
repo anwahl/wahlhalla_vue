@@ -13,17 +13,7 @@
               <button class="btn btn-primary" @click="showEdit = true">Edit</button>
               <button class="btn btn-secondary" @click="currentObject = null">Close</button>
           </h4>
-          <div class="card active-object">
-              <div class="card-body">
-                  <ul class="list-group list-group-flush">
-                  <li class="list-group-item" v-for="prop in objectProps">
-                      <strong>{{ prop.label }}:</strong> {{ prop.subOfSub ?  prop.formatter ? prop.formatter(currentObject[prop.subOfSub][prop.subOf][prop.name]) : currentObject[prop.subOfSub][prop.subOf][prop.name] 
-                                    : prop.subOf ?  prop.formatter ? prop.formatter(currentObject[prop.subOf][prop.name]) : currentObject[prop.subOf][prop.name]
-                                    : prop.formatter ? prop.formatter(currentObject[prop.name]) : currentObject[prop.name] }}
-                  </li>
-                  </ul>
-              </div>
-          </div>
+          <ObjectCard :objectProps="objectProps" :currentObject="currentObject" ></ObjectCard>
       </span>
       </div>
   </div>
@@ -61,10 +51,11 @@ import AssignedTask from "@/views/AssignedTask/AssignedTask.vue";
 import SubtaskCreate from "@/views/Subtask/SubtaskCreate.vue";
 import Subtask from "@/views/Subtask/Subtask.vue";
 import Loading from "@/components/Loading.vue";
+import ObjectCard from "@/components/ObjectCard.vue";
 
 export default {
   name: "objects-list",
-  components: { Loading, VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate, AssignedTask, AssignedTaskCreate, Subtask, SubtaskCreate},
+  components: { ObjectCard, Loading, VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate, AssignedTask, AssignedTaskCreate, Subtask, SubtaskCreate},
   props: {
     objectURL: String,
     childComponent: String,

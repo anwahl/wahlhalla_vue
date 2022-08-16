@@ -2,7 +2,7 @@
   <UpdateForm
     :inSeries="inSeries"
     objectURL="assignedTask"
-    :objectProps="!inSeries ? [{label: 'Person',
+    :objectProps="!inSeries ? [{label: 'Assigned Person',
                     name: 'personId',
                     type: 'inputSelect',
                     items : this.personItems,
@@ -15,12 +15,6 @@
                     items : this.taskItems,
                     itemDisplay : 'description',
                     required: true},
-                    {label: 'Type',
-                    name: 'type',
-                    type: 'inputSelect',
-                    items : [{name: 'DAILY'},{name: 'WEEKLY'},{name: 'MONTHLY'},{name: 'YEARLY'},{name: 'STANDALONE'}],
-                    itemDisplay : 'name',
-                    required: true},
                     {label: 'Due Date',
                     name: 'dueDate',
                     type: 'inputDate',
@@ -32,10 +26,6 @@
                     {label: 'End Time',
                     name: 'endTimeOfDay',
                     type: 'inputTime',
-                    required: false},
-                    {label: 'Occurrences',
-                    name: 'occurrences',
-                    type: 'inputNumber',
                     required: false},
                     {label: 'Complete',
                     name: 'complete',
