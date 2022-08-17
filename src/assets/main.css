@@ -53,6 +53,12 @@ a,
   color: rgb(42, 40, 43)
 }
 
+.btn-inline {
+  height: 25px;
+  font-size: 12px;
+  padding: 4px;
+}
+
 form ~ button.btn.delete-btn{
   position: absolute;
   bottom: 0;
@@ -72,6 +78,12 @@ form ~ button.btn.delete-btn{
   width: 50%;
   border-radius: 20px;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.info {
+  color: rgb(170, 170, 170);
+  font-size: 10px;
+  display: block;
 }
 
 .list-group-item.active {
@@ -202,7 +214,6 @@ select.form-control, select.form-control:focus {
 .form-title {
   font-size: 1.5rem;
   font-weight: 700;
-  padding: 2rem;
 }
 
 .submit-form {

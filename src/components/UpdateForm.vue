@@ -85,7 +85,7 @@ export default {
                 title: 'Delete Task(s)',
                 message: `Are you sure you want to delete the ${this.objectName}(s)? It cannot be undone.`,
                 okButton: 'Delete Forever',
-            })
+            });
       if (ok) {
           var accessToken = await auth0.getTokenSilently();
           await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken);
