@@ -192,11 +192,7 @@ export default  {
   components: { Input, TargetCreate, TargetTypeCreate, PersonCreate, TaskTypeCreate, TaskCreate, VueFinalModal },
   watch: {
     onDate:{handler (newDate) {
-            this.objectProps.forEach((element) => {
-                if (element.name == "dueDate") {
-                    this.object[element.name] = newDate;
-                }
-            });
+                this.object["dueDate"] = newDate;
            }
     }
   },
