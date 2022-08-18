@@ -37,6 +37,34 @@
         }
     });
     
+    
+    
+</script>
+<script>
+import TargetCreate from "@/views/Target/TargetCreate.vue";
+import TargetTypeCreate from "@/views/TargetType/TargetTypeCreate.vue";
+import PersonCreate from "@/views/Person/PersonCreate.vue";
+import TaskTypeCreate from "@/views/TaskType/TaskTypeCreate.vue";
+import TaskCreate from "@/views/Task/TaskCreate.vue";
+import Input from "@/components/Input.vue";
+import POST from "@/composables/POST";
+import GET from "@/composables/GET";
+import PUT from "@/composables/PUT";
+import DELETE from "@/composables/DELETE";
+import dateFunc from 'date-and-time';
+import { VueFinalModal } from 'vue-final-modal';
+
+export default  {
+  name: "workflow",
+  emits: ['onFormSubmit'],
+  components: { Input, TargetCreate, TargetTypeCreate, PersonCreate, TaskTypeCreate, TaskCreate, VueFinalModal },
+  watch: {
+    onDate:{handler (newDate) {
+            this.object["dueDate"] = newDate;
+        }
+    }
+  },
+  data() {
     const createObjectProps = 
                         [{label: 'Target Type',
                             name: 'targetTypeId',
@@ -81,7 +109,7 @@
                             name: 'dueDate',
                             type: 'inputDate',
                             required: true,
-                            value: props.onDate},
+                            value: this.onDate},
                         {label: 'Start Time',
                             name: 'timeOfDay',
                             type: 'inputTime',
@@ -163,41 +191,14 @@
                             name: 'complete',
                             type: 'inputCheck'}];
 
-    
-</script>
-<script>
-import TargetCreate from "@/views/Target/TargetCreate.vue";
-import TargetTypeCreate from "@/views/TargetType/TargetTypeCreate.vue";
-import PersonCreate from "@/views/Person/PersonCreate.vue";
-import TaskTypeCreate from "@/views/TaskType/TaskTypeCreate.vue";
-import TaskCreate from "@/views/Task/TaskCreate.vue";
-import Input from "@/components/Input.vue";
-import POST from "@/composables/POST";
-import GET from "@/composables/GET";
-import PUT from "@/composables/PUT";
-import DELETE from "@/composables/DELETE";
-import dateFunc from 'date-and-time';
-import { VueFinalModal } from 'vue-final-modal';
-
-export default  {
-  name: "workflow",
-  emits: ['onFormSubmit'],
-  components: { Input, TargetCreate, TargetTypeCreate, PersonCreate, TaskTypeCreate, TaskCreate, VueFinalModal },
-  watch: {
-    onDate:{handler (newDate) {
-            this.object["dueDate"] = newDate;
-        }
-    }
-  },
-  data() {
     let object = [{id: null}];
     var objectProps = [{}];
     if (this.action == "Create") {
-        objectProps = this.createObjectProps;
+        objectProps = createObjectProps;
     } else if (this.action == "Update") {
-        objectProps = this.updateObjectProps;
+        objectProps = updateObjectProps;
     } else if (this.action == "Update Series") {
-        objectProps = this.updateSeriesObjectProps;
+        objectProps = updateSeriesObjectProps;
     } else {
     }
     return {
