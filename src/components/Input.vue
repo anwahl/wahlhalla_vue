@@ -16,7 +16,7 @@
           @change="$emit('onOptionChange')"
           :name="prop.name"
           v-if="prop.type == 'inputSelect'">
-            <option value=''></option>
+            <option></option>
             <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ prop.itemSubOf ? item[prop.itemSubOf][prop.itemDisplay] : item[prop.itemDisplay] }}</option>
         </select>
         <input

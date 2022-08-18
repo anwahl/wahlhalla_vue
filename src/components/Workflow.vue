@@ -230,7 +230,7 @@ export default  {
     },
     async onCreate(prop) {
         let newOptions = await GET(`${prop}/`);
-        let options = "<option value=''></option>";
+        let options = "<option value='null'></option>";
         newOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + (option.description ? option.description : (option.firstName ? option.firstName + ' ' + option.lastName : option)) + "</option>";
         });
@@ -307,7 +307,7 @@ export default  {
     async taskTypeChange() {
         if (this.object.targetId == null) {
             let taskOptions = await GET("task/type/" + this.object.taskTypeId);
-            let options = "<option value=''></option>";
+            let options = "<option></option>";
             taskOptions.forEach((option) => {
                 options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
             });
@@ -319,7 +319,7 @@ export default  {
     async targetChange() {
         if (this.object.taskTypeId == null) {
             let taskOptions = await GET("task/target/" + this.object.targetId);
-            let options = "<option value=''></option>";
+            let options = "<option></option>";
             taskOptions.forEach((option) => {
                 options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
             });
@@ -330,7 +330,7 @@ export default  {
     },
     async targetTypeChange() {
         let targetOptions = await GET("target/type/" + this.object.targetTypeId);
-        let options = "<option value=''></option>";
+        let options = "<option></option>";
         targetOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
         });
@@ -338,7 +338,7 @@ export default  {
     },
     async targetOrTypeChange() {
         let taskOptions = await GET(`task/targetAndType/${this.object.targetId}/${this.object.taskTypeId}`);
-        let options = "<option value=''></option>";
+        let options = "<option></option>";
         taskOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
         });
