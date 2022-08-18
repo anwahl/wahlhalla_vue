@@ -55,7 +55,7 @@ export default  {
         }
     }
   },
-  data() {
+  async data() {
     
     let personOptions = await GET("person");
     let taskTypeOptions = await GET("taskType");
