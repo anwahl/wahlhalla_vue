@@ -22,12 +22,6 @@
 </form>
 </template>
 <script setup>
-    let personOptions = await GET("person");
-    let taskTypeOptions = await GET("taskType");
-    let targetTypeOptions = await GET("targetType");
-    let targetOptions = await GET("target");
-    let taskOptions = await GET("task");
-
     const props = defineProps({
         action: String,
         onDate: String,
@@ -36,9 +30,6 @@
             default: []
         }
     });
-    
-    
-    
 </script>
 <script>
 import TargetCreate from "@/views/Target/TargetCreate.vue";
@@ -65,6 +56,13 @@ export default  {
     }
   },
   data() {
+    
+    let personOptions = await GET("person");
+    let taskTypeOptions = await GET("taskType");
+    let targetTypeOptions = await GET("targetType");
+    let targetOptions = await GET("target");
+    let taskOptions = await GET("task");
+
     const createObjectProps = 
                         [{label: 'Target Type',
                             name: 'targetTypeId',
