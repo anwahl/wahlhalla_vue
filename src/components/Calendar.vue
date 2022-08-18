@@ -208,7 +208,7 @@ export default {
     <vue-final-modal :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCreate = false" type="button" />
         <!--<AssignedTaskCreate v-if="showCreate" :onDate="onDate" :atTime="atTime" @onFormSubmit="showCreate = false; refreshList()" />-->
-        <Workflow action="Create" :onDate="onDate" @onFormSubmit="showCreate = false; refreshList"> </Workflow>
+        <Workflow action="Create" :onDate="onDate" @onFormSubmit="showCreate = false; refreshList()"> </Workflow>
     </vue-final-modal>
     <div class="">
         <vue-cal style="height: 80vh; " :events="events" 
@@ -230,15 +230,15 @@ export default {
         <span v-if="currentAssignedTask">
             <vue-final-modal :lock-scroll="false" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showEdit = false" />
-                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false; refreshList" />
+                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false; refreshList()" />
             </vue-final-modal>
             <button class="btn btn-primary" @click="showEdit= true">Edit</button>
             <vue-final-modal :lock-scroll="false" v-model="showSeriesEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSeriesEdit = false" />
-                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false; refreshList" />
+                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false; refreshList()" />
             </vue-final-modal>
             <button class="btn btn-secondary" @click="showSeriesEdit= true" v-if="currentAssignedTask.type != 'STANDALONE'">Edit Series</button>
-            <vue-final-modal :lock-scroll="false" @closed="refreshList" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+            <vue-final-modal :lock-scroll="false" @closed="refreshList()" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSubtasks = false" />
                 <component :is="SubtaskList" :byAssignedTask="currentAssignedTask.id" />
             </vue-final-modal>

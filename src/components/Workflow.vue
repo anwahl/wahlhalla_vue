@@ -193,7 +193,9 @@ export default  {
   watch: {
     onDate:{handler (newDate) {
             this.objectProps.forEach((element) => {
-                this.object[element.name] = newDate;
+                if (element.name == "dueDate") {
+                    this.object[element.name] = newDate;
+                }
             });
            }
     }
