@@ -8,7 +8,7 @@
           :name="prop.name"
           v-if="prop.type == 'inputText'"
         />
-        <select @search="$emit('fetchOptions')" ref=""
+        <select 
           class="form-control"
           :id="prop.name"
           :required="prop.required ? true : false"
@@ -16,7 +16,7 @@
           @change="$emit('onOptionChange')"
           :name="prop.name"
           v-if="prop.type == 'inputSelect'">
-            <option value=''></option>
+            <option></option>
             <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ prop.itemSubOf ? item[prop.itemSubOf][prop.itemDisplay] : item[prop.itemDisplay] }}</option>
         </select>
         <input
@@ -31,12 +31,10 @@
         <Datepicker :enableTimePicker="false" autoApply :textInput="true" 
           :id="prop.name"
           :required="prop.required ? true : false"
-          v-model="object[prop.name]"
           :name="prop.name"
-          :modelValue="prop.value"
+          v-model="object[prop.name]"
           v-if="prop.type == 'inputDate'"
         />
-        {{ prop.value }}
         <Datepicker timePicker
           :id="prop.name"
           :required="prop.required ? true : false"
@@ -59,7 +57,7 @@
 import Datepicker from '@vuepic/vue-datepicker';
 export default {
     name: "form-input",
-    emits: ['fetchOptions','onOptionChange'],
+    emits: ['onOptionChange'],
     components: {
         Datepicker
     },

@@ -5,14 +5,14 @@
     :objectProps="!inSeries ? [{label: 'Assigned Person',
                     name: 'personId',
                     type: 'inputSelect',
-                    items : this.personItems,
+                    items : personItems,
                     itemDisplay : 'firstName',
                     subOf: 'person'},
                     {label: 'Task',
                     name: 'taskId',
                     type: 'inputSelect',
                     subOf: 'task',
-                    items : this.taskItems,
+                    items : taskItems,
                     itemDisplay : 'description',
                     required: true},
                     {label: 'Due Date',
@@ -34,14 +34,14 @@
                     [{label: 'Person',
                     name: 'personId',
                     type: 'inputSelect',
-                    items : this.personItems,
+                    items : personItems,
                     itemDisplay : 'firstName',
                     subOf: 'person'},
                     {label: 'Task',
                     name: 'taskId',
                     type: 'inputSelect',
                     subOf: 'task',
-                    items : this.taskItems,
+                    items : taskItems,
                     itemDisplay : 'description',
                     required: true},
                     {label: 'Start Time',
@@ -56,16 +56,17 @@
                     name: 'complete',
                     type: 'inputCheck'}]"
     objectName="Assigned Task"
+    @onFormSubmit="$emit('onFormSubmit')"
   />
 </template>
 <script>
 import UpdateForm from "@/components/UpdateForm.vue";
-import auth0 from "@/composables/auth0Client";
 import GET from "@/composables/GET";
 
 export default {
   name: "assignedTask-update",
   components: { UpdateForm },
+  emits: ['onFormSubmit'],
   props: {
     inSeries: false,
   },
@@ -81,13 +82,11 @@ export default {
   },
   methods: {
     async getPersons() {
-      var accessToken = await auth0.getTokenSilently();
-      this.personItems = await GET("person", accessToken);
+      this.personItems = await GET("person");
       return this.personItems;
     },
     async getTasks() {
-      var accessToken = await auth0.getTokenSilently();
-      this.taskItems = await GET("task", accessToken);
+      this.taskItems = await GET("task");
       return this.taskItems;
     }
   },

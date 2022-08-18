@@ -4,7 +4,6 @@
 <script>
 import Form from "@/components/Form.vue";
 import POST from "@/composables/POST";
-import auth0 from "@/composables/auth0Client";
 
 export default  {
   name: "object-create",
@@ -20,11 +19,7 @@ export default  {
         }
     });
     return {
-        object,
-        errors: {
-            type: Array,
-            default: []
-        },
+        object
     }
   },
   props: {
@@ -59,8 +54,7 @@ export default  {
               }
           });
 
-          let accessToken = await auth0.getTokenSilently();
-          let result = await POST(this.objectURL, accessToken, data);
+          let result = await POST(this.objectURL, data);
           this.object.id = result.id;
           this.objectProps.forEach((element) => {
               this.object[element.name] = null;

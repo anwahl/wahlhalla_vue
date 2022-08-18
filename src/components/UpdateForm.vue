@@ -8,14 +8,13 @@ import Form from "@/components/Form.vue";
 import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import GET from "@/composables/GET";
-import auth0 from "@/composables/auth0Client";
 import dateFunc from 'date-and-time';
 import Confirmation from '../components/Confirmation.vue'
 import { watch, ref } from 'vue';
 
 export default {
   name: "object-update",
-  emits: 'onFormSubmit',
+  emits: ['onFormSubmit'],
   components: { Confirmation, Form },
   props:{
     objectId: Number,
@@ -28,22 +27,18 @@ export default {
     inSeries: false
   },
   data() {
-    let currentObject = { id: null };
+    let currentObject = [{ id: null }];
     this.objectProps.forEach((element) => {
       currentObject[element.name] = null
     });
     return {
-        errors: {
-          type: Array,
-          default: []
-        },
         currentObject: null,
     }
   },
   methods: {
     async getObject(id) {
-      var accessToken = await auth0.getTokenSilently();
-      this.currentObject = await GET(`${this.objectURL}/${id}`, accessToken);
+      
+      this.currentObject = await GET(`${this.objectURL}/${id}`);
       for (const element in this.currentObject) {
         if (new RegExp("^[0-9]{2}:[0-9]{2}:00$").test(this.currentObject[element])) {
           this.currentObject[element] = {hours: this.currentObject[element].split(':')[0], minutes: this.currentObject[element].split(':')[1]};
@@ -76,8 +71,8 @@ export default {
           this.currentObject[element.name] = this.currentObject[element.name];
         }
       });
-      var accessToken = await auth0.getTokenSilently();
-      await PUT(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken, this.currentObject);
+      
+      await PUT(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, this.currentObject);
       this.$emit('onFormSubmit');
     },
     async deleteObject() {
@@ -87,15 +82,13 @@ export default {
                 okButton: 'Delete Forever',
             });
       if (ok) {
-          var accessToken = await auth0.getTokenSilently();
-          await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, accessToken);
+          await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`);
           
           this.$emit('onFormSubmit');
       }
     }
   },
   mounted() {
-    this.message = '';
     this.getObject(this.objectId);
     watch(() => this.objectId, async (newId, oldId) => {
         this.getObject(newId);

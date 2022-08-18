@@ -1,11 +1,11 @@
 <template>
-  <div>
-       An unknown error has occurred.
-  </div>
+ <ErrorComponent :error="error"> </ErrorComponent>
 </template>
- 
 <script>
-export default {
-  
-}
+  export default {
+    name: "error-view",
+    props: {
+      error: {}
+    }
+  };
 </script>

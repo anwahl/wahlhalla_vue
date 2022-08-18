@@ -20,10 +20,24 @@ a,
   transition: 0.4s;
 }
 
+
+.v-sidebar-menu .vsm--link_level-1 .vsm--icon {
+  border-radius: 20px;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
+}
+
+
+.home-card > .card-body {
+  text-align: center;
+}
+
+.home-card {
+  margin-top: 20px;
 }
 
 .btn {
@@ -84,6 +98,7 @@ form ~ button.btn.delete-btn{
   color: rgb(170, 170, 170);
   font-size: 10px;
   display: block;
+
 }
 
 .list-group-item.active {
@@ -91,8 +106,17 @@ form ~ button.btn.delete-btn{
   border-color: var(--vt-c-purple-mute);
 }
 
+.errors-container {
+  font-size: 24px;
+}
+.errors-container > * > * >.errors {
+  display: block;
+  font-size: 16px;
+}
+
 .errors {
   color: rgb(255, 0, 0);
+  font-weight: bold;
 }
 
 .errors > span {

@@ -12,16 +12,15 @@
   </main>
   </div>
 </template>
-<script lang="ts">
+<script>
 import {  Vue } from "vue-property-decorator";
 import { SidebarMenu } from 'vue-sidebar-menu';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
 import auth0 from "@/composables/auth0Client";
-import Loading from "@/components/Loading.vue";
 
 export default  {
   name: "App",
-  components: { SidebarMenu, Loading },
+  components: { SidebarMenu },
   setup() {
     return {};
   },
@@ -105,36 +104,32 @@ export default  {
         }
     },
     methods : {
-        // @ts-ignore
         onToggleCollapse (collapsed) {
-            // @ts-ignore
             this.collapsed = collapsed;
         },
-        // @ts-ignore
         onItemClick (event, item) {
             if (item.title === 'Login') {
-                auth0.loginWithRedirect();
+                if (import.meta.env.VITE_ENV === "production") {
+                    auth0.loginWithRedirect();
+                }
             }
             if (item.title === 'Sign Out') {
-                auth0.logout({ returnTo: window.location.origin });
+                if (import.meta.env.VITE_ENV === "production") {
+                    auth0.logout({ returnTo: window.location.origin });
+                }
             }
         },
         onResize () {
             if (window.innerWidth <= 767) {
-                // @ts-ignore
                 this.collapsed = true;
             } else {
-                // @ts-ignore
                 this.collapsed = false;
             }
         }
     },
     mounted () {
-        // @ts-ignore
         this.onResize();
-        // @ts-ignore
         window.addEventListener('resize', this.onResize);
-        // @ts-ignore
         this.isLoading = false;
     }
 }
@@ -143,7 +138,7 @@ export class App extends Vue {
 }
 </script>
 
-<style>
+<style scope>
 #main-view {
   padding-left: 350px;
   transition: 0.3s ease;

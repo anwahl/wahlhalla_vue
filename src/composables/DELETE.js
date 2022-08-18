@@ -1,12 +1,23 @@
-export default async function DELETE (url, accessToken, body) {
-    const result = await fetch(`${import.meta.env.VITE_API_BASE_URL}${url}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + accessToken
-      }
-    })
-    const data = await result.json();
+import auth0 from "@/composables/auth0Client";
+import axios from "axios";
+
+export default async function DELETE (url) {
+  const accessToken = (import.meta.env.VITE_ENV === "production" ? await auth0.getTokenSilently() : null);
+  let data;
+  await axios(`${import.meta.env.VITE_API_BASE_URL}${url}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  })
+  .then(response => {
+    data = response.data;
     console.log(data);
-    return await data ;
-  }
+    })
+  .catch(error => {
+    console.log(error.message);
+  });
+      
+  return data;
+}

@@ -1,24 +1,23 @@
 <template>
- <div  class="list row">
+ <div class="list row">
     <Loading v-if="isLoading"></Loading>
   </div>
-  <div style="" v-if="!isLoading">
-    <ViewButton v-for="(cat, index) in categories" :item="cat.name" @viewEvent="viewCategory(cat)" />
+  <div v-if="!isLoading">
+    <ViewButton v-for="(cat, index) in categories" :item="cat.name" @viewEvent="viewCategory(cat)" ></ViewButton>
   </div>
-  <div style="" v-if="!isLoading">
+  <div v-if="!isLoading">
     <h4>{{ categoryName }}</h4>
-    <Calendar v-if="renderCalendar" @updateEvents="forceRerender" :category="category" />
+    <Calendar v-if="renderCalendar" @updateEvents="forceRerender" :category="category" ></Calendar>
   </div>
 </template>
  
 <script>
 import Calendar from "@/components/Calendar.vue";
 import ViewButton from "@/components/buttons/ViewButton.vue";
-import Loading from "@/components/Loading.vue";
 
 export default {
   name: 'dashboard',
-  components: { Calendar, ViewButton, Loading },
+  components: { Calendar, ViewButton },
   data () {
     return {
         isLoading: true,

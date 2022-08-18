@@ -13,12 +13,9 @@
 </template>
 <script>
 export default {
-  name: "objects-list",
+  name: "objects-card",
   props: {
-    currentObject: {
-      type: Array,
-      default: []
-    },
+    currentObject: {},
     objectProps: {
       type: Array,
       default: []

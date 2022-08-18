@@ -27,7 +27,6 @@ const {
 </script>
 <script>
 import UpdateForm from "@/components/UpdateForm.vue";
-import auth0 from "@/composables/auth0Client";
 import GET from "@/composables/GET";
 
 export default {

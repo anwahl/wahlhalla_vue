@@ -1,19 +1,17 @@
 import { ref, type Ref } from 'vue';
 import { asyncComputed } from '@vueuse/core';
 import GET from '@/composables/GET';
-import auth0 from "@/composables/auth0Client";
 
 export default function useAsyncOptions(optionType: string): {
   evaluating: Ref<boolean>
-  asyncOptions: Ref<Array<{}>>
+  asyncOptions: Ref<Array<{}> | undefined>
   apiError: Ref<string>
 } {
   const evaluating = ref(false)
   const apiError = ref('')
   const asyncOptions = asyncComputed(
     async () => {
-      var accessToken = await auth0.getTokenSilently();
-      const options = await GET(optionType, accessToken);
+      const options = await GET(optionType);
       apiError.value = ''
       return options
     },
