@@ -22,8 +22,6 @@
 </form>
 </template>
 <script setup>
-    import useAsyncOptions from '@/composables/useAsyncOptions'
-
     let personOptions = await GET("person");
     let taskTypeOptions = await GET("taskType");
     let targetTypeOptions = await GET("targetType");
@@ -165,15 +163,7 @@
                             name: 'complete',
                             type: 'inputCheck'}];
 
-    var objectProps = [{}];
-    if (props.action == "Create") {
-        objectProps = createObjectProps;
-    } else if (props.action == "Update") {
-        objectProps = updateObjectProps;
-    } else if (props.action == "Update Series") {
-        objectProps = updateSeriesObjectProps;
-    } else {
-    }
+    
 </script>
 <script>
 import TargetCreate from "@/views/Target/TargetCreate.vue";
@@ -201,7 +191,15 @@ export default  {
   },
   data() {
     let object = [{id: null}];
-    
+    var objectProps = [{}];
+    if (this.action == "Create") {
+        objectProps = this.createObjectProps;
+    } else if (this.action == "Update") {
+        objectProps = this.updateObjectProps;
+    } else if (this.action == "Update Series") {
+        objectProps = this.updateSeriesObjectProps;
+    } else {
+    }
     return {
         render: true,
         showCreate: false,
@@ -212,7 +210,8 @@ export default  {
             default: []
         },
         isLoading: true,
-        object
+        object,
+        objectProps
     }
   },
   methods: {
@@ -280,7 +279,7 @@ export default  {
         this.$emit('onFormSubmit');
     },
     validateForm(e) {
-        /*this.errors = [];
+        this.errors = [];
         this.objectProps.forEach((prop) => {
             if (prop.required && !this.object[prop.name]) {
                 this.errors.push({message: prop.label + " is required.", property: prop.name})
@@ -292,8 +291,7 @@ export default  {
             this.saveObject()
             return true;
         }
-        e.preventDefault();*/
-        this.saveObject()
+        e.preventDefault();
     },
     refreshLists() {
         
