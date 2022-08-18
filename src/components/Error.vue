@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <button @click="login">Log out</button>
+  <div class="card errors-container">
+    <div class="card-body">
+      <h5 class="card-title">ERROR</h5>
+      <div class="card-text">
+        Wahlhalla has encountered an error: <span class="errors">{{ error }}</span>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-  import { useAuth0 } from '@auth0/auth0-vue';
-
   export default {
-    setup() {
-      const { loginWithRedirect } = useAuth0();
-
-      return {
-        login: () => {
-          null;
-        }
-      };
+    name: "error",
+    props: {
+      error: {}
     }
   };
 </script>

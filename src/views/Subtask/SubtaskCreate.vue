@@ -29,7 +29,6 @@ const {
 <script>
 import { ref, onMounted } from 'vue';
 import CreateForm from "@/components/CreateForm.vue";
-import auth0 from "@/composables/auth0Client";
 import GET from "@/composables/GET";
 
 export default {

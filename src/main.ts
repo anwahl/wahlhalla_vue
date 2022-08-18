@@ -1,5 +1,5 @@
 import { createApp, defineAsyncComponent } from "vue";
-import LoadingComponent from "@/components/Loading.vue";
+import Loading from "@/components/Loading.vue";
 import ErrorComponent from "@/components/Error.vue";
 import { createAuth0 } from '@auth0/auth0-vue';
 import App from "@/App.vue";
@@ -10,15 +10,17 @@ import "./assets/main.css";
 
 const app = createApp(App);
 
+if (import.meta.env.VITE_ENV === "production") {
+    app.use(createAuth0({
+        domain: import.meta.env.VITE_AUTH0_DOMAIN,
+        client_id: import.meta.env.VITE_AUTH0_CLIENT_ID,
+        redirect_uri: window.location.origin,
+        audience: import.meta.env.VITE_AUDIENCE
+    })) 
+}
+
 app
     .use(router)
-    .use(createAuth0({
-            domain: import.meta.env.VITE_AUTH0_DOMAIN,
-            client_id: import.meta.env.VITE_AUTH0_CLIENT_ID,
-            redirect_uri: window.location.origin,
-            audience: import.meta.env.VITE_AUDIENCE
-        })
-    )
     .component("ErrorComponent", ErrorComponent)
-    .component("LoadingComponent", LoadingComponent)
+    .component("Loading", Loading)
     .mount("#app");

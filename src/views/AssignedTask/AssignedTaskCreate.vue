@@ -46,7 +46,6 @@
 </template>
 <script>
 import CreateForm from "@/components/CreateForm.vue";
-import auth0 from "@/composables/auth0Client";
 import GET from "@/composables/GET";
 
 export default {
@@ -68,13 +67,11 @@ export default {
   },
   methods: {
     async getPersons() {
-      var accessToken = await auth0.getTokenSilently();
-      this.personItems = await GET("person", accessToken);
+      this.personItems = await GET("person");
       return this.personItems;
     },
     async getTasks() {
-      var accessToken = await auth0.getTokenSilently();
-      this.taskItems = await GET("task", accessToken);
+      this.taskItems = await GET("task");
       return this.taskItems;
     }
   },

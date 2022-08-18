@@ -1,11 +1,11 @@
 <template>
 <form @submit.prevent="validateForm" class="submit-form">
     <span class="form-title">{{ action }} Assigned Task</span>
-    <vue-final-modal v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+    <vue-final-modal :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCreate = false" />
         <component :is="typeCreate"  @onFormSubmit="showCreate = false; onCreate(typeToCreate)" ></component>
     </vue-final-modal>
-    <div class="errors" v-if="errors.length > 0"><span v-for="error in errors">{{ error.message }}</span></div>
+    <div class="errors" v-if="errors"><span v-for="error in errors">{{ error.message }}</span></div>
         <div v-for="(prop, index) in objectProps" class="form-group">
         <hr v-if="prop.name == 'targetTypeId'" />
         <span class="info" v-if="prop.name == 'targetTypeId'" >Task Filter Options</span>
@@ -24,18 +24,17 @@
 <script setup>
     import useAsyncOptions from '@/composables/useAsyncOptions'
 
-    let accessToken = await auth0.getTokenSilently();
-    let personOptions = await GET("person", accessToken);
-    let taskTypeOptions = await GET("taskType", accessToken);
-    let targetTypeOptions = await GET("targetType", accessToken);
-    let targetOptions = await GET("target", accessToken);
-    let taskOptions = await GET("task", accessToken);
+    let personOptions = await GET("person");
+    let taskTypeOptions = await GET("taskType");
+    let targetTypeOptions = await GET("targetType");
+    let targetOptions = await GET("target");
+    let taskOptions = await GET("task");
 
     const props = defineProps({
         action: String,
         onDate: String
     });
-    console.log(props.onDate);
+    
     const createObjectProps = 
                         [{label: 'Target Type',
                             name: 'targetTypeId',
@@ -163,13 +162,12 @@
                             type: 'inputCheck'}];
     let objectProps = {};
 
-
     if (props.action == "Create") {
-            objectProps = createObjectProps;
+        objectProps = createObjectProps;
     } else if (props.action == "Update") {
-            objectProps = updateObjectProps;
+        objectProps = updateObjectProps;
     } else if (props.action == "Update Series") {
-            objectProps = updateSeriesObjectProps;
+        objectProps = updateSeriesObjectProps;
     } else {
         //??
     }
@@ -185,7 +183,6 @@ import POST from "@/composables/POST";
 import GET from "@/composables/GET";
 import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
-import auth0 from "@/composables/auth0Client";
 import dateFunc from 'date-and-time';
 import { VueFinalModal } from 'vue-final-modal';
 
@@ -193,14 +190,20 @@ export default  {
   name: "workflow",
   emits: ['onFormSubmit'],
   components: { Input, TargetCreate, TargetTypeCreate, PersonCreate, TaskTypeCreate, TaskCreate, VueFinalModal },
+  watch: {
+    onDate:{handler (newDate) {
+            this.objectProps.forEach((element) => {
+                this.object[element.name] = newDate;
+            });
+           }
+    }
+  },
   data() {
+    let object = [{id: null}];
+    
     return {
         render: true,
         showCreate: false,
-         object: {
-            type: Array,
-            default: []
-        },
         typeCreate: String,
         typeToCreate: String,
         errors: {
@@ -208,6 +211,7 @@ export default  {
             default: []
         },
         isLoading: true,
+        object
     }
   },
   props: {
@@ -223,7 +227,7 @@ export default  {
         this.showCreate = true;
     },
     async onCreate(prop) {
-        let newOptions = await GET(`${prop}/`, this.accessToken);
+        let newOptions = await GET(`${prop}/`);
         let options = "<option value=''></option>";
         newOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + (option.description ? option.description : (option.firstName ? option.firstName + ' ' + option.lastName : option)) + "</option>";
@@ -231,28 +235,23 @@ export default  {
         document.getElementById(prop + "Id").innerHTML = options;
     },
     async getPersons() {
-        var accessToken = await auth0.getTokenSilently();
-        this.personItems = await GET("person", accessToken);
+        this.personItems = await GET("person");
         return this.personItems;
     },
     async getTasks() {
-        var accessToken = await auth0.getTokenSilently();
-        this.taskItems = await GET("task", accessToken);
+        this.taskItems = await GET("task");
         return this.taskItems;
     },
     async getTaskTypes() {
-        var accessToken = await auth0.getTokenSilently();
-        this.taskTypeItems = await GET("taskType", accessToken);
+        this.taskTypeItems = await GET("taskType");
         return this.typeItems;
     },
     async getTargets() {
-        var accessToken = await auth0.getTokenSilently();
-        this.targetItems = await GET("target", accessToken);
+        this.targetItems = await GET("target");
         return this.targetItems;
     },
     async getTargetTypes() {
-        var accessToken = await auth0.getTokenSilently();
-        this.targetTypeItems = await GET("targetType", accessToken);
+        this.targetTypeItems = await GET("targetType");
         return this.typeItems;
     },
     async saveObject() {
@@ -278,7 +277,7 @@ export default  {
             }
         });
 
-        let result = await POST('assignedTask', this.accessToken, data);
+        let result = await POST('assignedTask', data);
         this.object.id = result.id;
         this.objectProps.forEach((element) => {
             this.object[element.name] = null;
@@ -305,7 +304,7 @@ export default  {
     },
     async taskTypeChange() {
         if (this.object.targetId == null) {
-            let taskOptions = await GET("task/type/" + this.object.taskTypeId, this.accessToken);
+            let taskOptions = await GET("task/type/" + this.object.taskTypeId);
             let options = "<option value=''></option>";
             taskOptions.forEach((option) => {
                 options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
@@ -317,7 +316,7 @@ export default  {
     },
     async targetChange() {
         if (this.object.taskTypeId == null) {
-            let taskOptions = await GET("task/target/" + this.object.targetId, this.accessToken);
+            let taskOptions = await GET("task/target/" + this.object.targetId);
             let options = "<option value=''></option>";
             taskOptions.forEach((option) => {
                 options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
@@ -328,7 +327,7 @@ export default  {
         }
     },
     async targetTypeChange() {
-        let targetOptions = await GET("target/type/" + this.object.targetTypeId, this.accessToken);
+        let targetOptions = await GET("target/type/" + this.object.targetTypeId);
         let options = "<option value=''></option>";
         targetOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
@@ -336,7 +335,7 @@ export default  {
         document.getElementById("targetId").innerHTML = options;
     },
     async targetOrTypeChange() {
-        let taskOptions = await GET(`task/targetAndType/${this.object.targetId}/${this.object.taskTypeId}`, this.accessToken);
+        let taskOptions = await GET(`task/targetAndType/${this.object.targetId}/${this.object.taskTypeId}`);
         let options = "<option value=''></option>";
         taskOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
@@ -350,8 +349,6 @@ export default  {
       this.render = true;
       this.isLoading = false;
     }
-  },
-  mounted () {
   }
 }
 </script>

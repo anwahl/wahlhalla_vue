@@ -6,7 +6,7 @@
     <div class="col col-lg-12" >
       <span v-if="currentObject">
           <h4>{{ objectName }}
-              <vue-final-modal v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+              <vue-final-modal :lock-scroll="false" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                   <button class="modal__close" @click="showEdit = false" />
                   <component :is="childComponent" :objectId="currentObject.id"  @onFormSubmit="showEdit = false; refreshList()" />
               </vue-final-modal>
@@ -20,7 +20,7 @@
   <div class="list row list-view">
     <div class="col col-lg-12">
       <h4 v-if="!isLoading">{{ objectName }} List
-        <vue-final-modal v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+        <vue-final-modal :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
             <button class="modal__close" @click="showCreate = false" />
             <component :is="childCreateComponent" @onFormSubmit="showCreate = false; refreshList()" :byObjectId="byObjectId ? byObjectId : ''" />
         </vue-final-modal>
@@ -34,7 +34,6 @@
 import { defineAsyncComponent, ref } from 'vue';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import GET from "@/composables/GET";
-import auth0 from "@/composables/auth0Client";
 import { VueFinalModal } from 'vue-final-modal';
 import TargetCreate from "@/views/Target/TargetCreate.vue";
 import Target from "@/views/Target/Target.vue";
@@ -50,12 +49,11 @@ import AssignedTaskCreate from "@/views/AssignedTask/AssignedTaskCreate.vue";
 import AssignedTask from "@/views/AssignedTask/AssignedTask.vue";
 import SubtaskCreate from "@/views/Subtask/SubtaskCreate.vue";
 import Subtask from "@/views/Subtask/Subtask.vue";
-import Loading from "@/components/Loading.vue";
 import ObjectCard from "@/components/ObjectCard.vue";
 
 export default {
   name: "objects-list",
-  components: { ObjectCard, Loading, VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate, AssignedTask, AssignedTaskCreate, Subtask, SubtaskCreate},
+  components: { ObjectCard, VueFinalModal, TargetCreate, Target, TargetTypeCreate, TargetType, PersonCreate, Person, TaskType, TaskTypeCreate, Task, TaskCreate, AssignedTask, AssignedTaskCreate, Subtask, SubtaskCreate},
   props: {
     objectURL: String,
     childComponent: String,
@@ -87,8 +85,8 @@ export default {
   },
   methods: {
     async retrieveObjects() {
-      var accessToken = await auth0.getTokenSilently();
-      this.objects = await GET(this.objectURL, accessToken);
+      
+      this.objects = await GET(this.objectURL);
       return this.objects;
     },
     async refreshList() {
@@ -112,7 +110,7 @@ export default {
             formatterParams: (element.formatterParams ? element.formatterParams : {})
         });
     });
-    var accessToken = await auth0.getTokenSilently();
+    
     this.tabulator = new Tabulator(this.$refs.table, {
         data: await this.retrieveObjects(),
         layout:"fitDataStretch",

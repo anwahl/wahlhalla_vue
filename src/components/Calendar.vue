@@ -1,14 +1,12 @@
 <script setup>
-import useAsyncOptions from '@/composables/useAsyncOptions';
-import auth0 from "@/composables/auth0Client";
 import GET from "@/composables/GET";
 import { reactive, toRefs } from "vue";
 const props = defineProps({
   category: String,
 });
 
-var accessToken = await auth0.getTokenSilently();
-const assignedTasks = await GET(`assignedTask/category/${props.category}`, accessToken);
+
+const assignedTasks = await GET(`assignedTask/category/${props.category}`);
 const events = [];
  for (const element in assignedTasks) {
     events.push({
@@ -29,7 +27,6 @@ import { VueFinalModal } from 'vue-final-modal';
 import AssignedTask from "@/views/AssignedTask/AssignedTask.vue";
 import SubtaskList from "@/views/Subtask/SubtaskList.vue";
 import AssignedTaskCreate from "@/views/AssignedTask/AssignedTaskCreate.vue";
-import Loading from "@/components/Loading.vue";
 import ObjectCard from "@/components/ObjectCard.vue";
 import * as formatter from "@/composables/cellFormatter.js";
 import PUT from "@/composables/PUT";
@@ -48,11 +45,12 @@ export default {
             isLoading: true,
             showDate: new Date(),
             currentAssignedTask: null,
+            showCurrentAssignedTask: false,
             showEdit: false,
             showCreate: false,
             showSeriesEdit: false,
             showSubtasks: false,
-            onDate: null,
+            onDate: '',
             atTime: null,
             objectProps: [{label: 'Person',
                         name: 'firstName',
@@ -87,24 +85,25 @@ export default {
         }
     },
     components: {
-       VueCal, Loading, VueFinalModal, AssignedTaskCreate, AssignedTask, SubtaskList, ObjectCard, Confirmation, Workflow
+       VueCal, VueFinalModal, AssignedTaskCreate, AssignedTask, SubtaskList, ObjectCard, Confirmation, Workflow
     },
     methods: {
         async onEventClick(event, e) {
             this.currentAssignedTask = await this.retrieveAssignedTask(event.id);
+            this.showCurrentAssignedTask = true;
         },
         onCellClick(event, e){
             let date = new Date(event);
             this.onDate = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
             //this.atTime = {hours: (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()), minutes: (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())};
+            
             this.showCreate = true;
         },
         setActiveAssignedTask(assignedTask) {
             this.currentAssignedTask = assignedTask;
         },
         async retrieveAssignedTask(id) {
-            var accessToken = await auth0.getTokenSilently();
-            this.assignedTask = await GET(`assignedTask/${id}`, accessToken);
+            this.assignedTask = await GET(`assignedTask/${id}`);
             return this.assignedTask;
         },
         setShowDate(d) {
@@ -124,8 +123,8 @@ export default {
         },
         async refreshList() {
             this.isLoading = true;
-            var accessToken = await auth0.getTokenSilently();
-            let assignedTasks = await GET(`assignedTask/category/${this.$props.category}`, accessToken);
+            
+            let assignedTasks = await GET(`assignedTask/category/${this.$props.category}`);
             
             this.events = [];
             for (const element in assignedTasks) {
@@ -190,8 +189,7 @@ export default {
                 date = ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
                 this.currentAssignedTask['dueDate'] = date;
 
-                var accessToken = await auth0.getTokenSilently();
-                await PUT(`assignedTask/${this.currentAssignedTask.id}`, accessToken, this.currentAssignedTask);
+                await PUT(`assignedTask/${this.currentAssignedTask.id}`, this.currentAssignedTask);
                 this.$emit('updateEvents');
             }
         }
@@ -207,10 +205,10 @@ export default {
     <Loading v-if="isLoading"></Loading>
   </div>
   <div  v-if="!isLoading" class="list row">
-    <vue-final-modal v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+    <vue-final-modal :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCreate = false" type="button" />
         <!--<AssignedTaskCreate v-if="showCreate" :onDate="onDate" :atTime="atTime" @onFormSubmit="showCreate = false; refreshList()" />-->
-        <Workflow action="Create" :onDate="onDate" @onFormSubmit="showCreate = false; refreshList()"> </Workflow>
+        <Workflow action="Create" :onDate="onDate" @onFormSubmit="showCreate = false; refreshList"> </Workflow>
     </vue-final-modal>
     <div class="">
         <vue-cal style="height: 80vh; " :events="events" 
@@ -227,20 +225,20 @@ export default {
                         activeView="month"
                         class="" />
     </div>
-    <vue-final-modal v-model="currentAssignedTask" :esc-to-close="true" classes="modal-container" content-class="modal-content">
-        <button class="modal__close" @click="currentAssignedTask = false" />
+    <vue-final-modal :lock-scroll="false" v-model="showCurrentAssignedTask" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+        <button class="modal__close" @click="showCurrentAssignedTask = false" />
         <span v-if="currentAssignedTask">
-            <vue-final-modal v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+            <vue-final-modal :lock-scroll="false" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showEdit = false" />
-                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false; refreshList()" />
+                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false; refreshList" />
             </vue-final-modal>
             <button class="btn btn-primary" @click="showEdit= true">Edit</button>
-            <vue-final-modal v-model="showSeriesEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+            <vue-final-modal :lock-scroll="false" v-model="showSeriesEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSeriesEdit = false" />
-                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false; refreshList()" />
+                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false; refreshList" />
             </vue-final-modal>
             <button class="btn btn-secondary" @click="showSeriesEdit= true" v-if="currentAssignedTask.type != 'STANDALONE'">Edit Series</button>
-            <vue-final-modal @closed="refreshList" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+            <vue-final-modal :lock-scroll="false" @closed="refreshList" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSubtasks = false" />
                 <component :is="SubtaskList" :byAssignedTask="currentAssignedTask.id" />
             </vue-final-modal>
