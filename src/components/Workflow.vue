@@ -32,7 +32,11 @@
 
     const props = defineProps({
         action: String,
-        onDate: String
+        onDate: String,
+        currentAssignedTask: {
+            type: Array,
+            default: []
+        }
     });
     
     const createObjectProps = 
@@ -160,8 +164,8 @@
                         {label: 'Complete',
                             name: 'complete',
                             type: 'inputCheck'}];
-    let objectProps = {};
 
+    var objectProps = [{}];
     if (props.action == "Create") {
         objectProps = createObjectProps;
     } else if (props.action == "Update") {
@@ -169,7 +173,6 @@
     } else if (props.action == "Update Series") {
         objectProps = updateSeriesObjectProps;
     } else {
-        //??
     }
 </script>
 <script>
@@ -192,8 +195,8 @@ export default  {
   components: { Input, TargetCreate, TargetTypeCreate, PersonCreate, TaskTypeCreate, TaskCreate, VueFinalModal },
   watch: {
     onDate:{handler (newDate) {
-                this.object["dueDate"] = newDate;
-           }
+            this.object["dueDate"] = newDate;
+        }
     }
   },
   data() {
@@ -210,12 +213,6 @@ export default  {
         },
         isLoading: true,
         object
-    }
-  },
-  props: {
-    currentAssignedTask: {
-        type: Array,
-        default: []
     }
   },
   methods: {
@@ -283,7 +280,7 @@ export default  {
         this.$emit('onFormSubmit');
     },
     validateForm(e) {
-        this.errors = [];
+        /*this.errors = [];
         this.objectProps.forEach((prop) => {
             if (prop.required && !this.object[prop.name]) {
                 this.errors.push({message: prop.label + " is required.", property: prop.name})
@@ -295,7 +292,8 @@ export default  {
             this.saveObject()
             return true;
         }
-        e.preventDefault();
+        e.preventDefault();*/
+        this.saveObject()
     },
     refreshLists() {
         
