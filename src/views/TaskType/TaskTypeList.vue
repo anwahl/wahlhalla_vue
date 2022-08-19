@@ -3,10 +3,7 @@
     objectURL="taskType"
     childComponent='TaskType'
     childCreateComponent='TaskTypeCreate'
-    :objectProps="[{label : 'Description',
-                     name : 'description'},
-                    {label : 'Category',
-                    name : 'category'}]"
+    :objectProps="properties"
     :displayProps="[{label : 'Description',
                     name : 'description'},
                     {label : 'Category',
@@ -17,9 +14,14 @@
 </template>
 <script>
 import ListForm from "@/components/ListForm.vue";
+import getProperties from "@/composables/getProperties.js";
+import TaskType from "@/types/impl/TaskType";
 
 export default {
   name: "taskType-list",
   components: { ListForm }
 };
+</script>
+<script setup>
+  let properties = await getProperties(TaskType)
 </script>

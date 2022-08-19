@@ -3,10 +3,7 @@
     :objectURL="'subtask'+ (byAssignedTask ? '/assignedTask/' + byAssignedTask : '')"
     childComponent='Subtask'
     childCreateComponent='SubtaskCreate'
-    :objectProps="[{label : 'Description', name : 'description'},
-                    {label : 'Task', name : 'description',
-                     subOf: 'task',
-                     subOfSub: 'assignedTask'}]"
+    :objectProps="properties"
     :displayProps="[{label : 'Description',
                     name : 'description'},
                     {label : 'Task',
@@ -18,12 +15,17 @@
 </template>
 <script>
 import ListForm from "@/components/ListForm.vue";
+import getProperties from "@/composables/getProperties.js";
+import Subtask from "@/types/impl/Subtask";
 
 export default {
   name: "subtask-list",
-  components: { ListForm },
-  props: {
-    byAssignedTask: Number
-  }
+  components: { ListForm }
 };
+</script>
+<script setup>
+  const props = defineProps({
+    byAssignedTask: Number,
+  });
+  let properties = await getProperties(Subtask, props.byAssignedTask)
 </script>

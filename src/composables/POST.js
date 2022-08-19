@@ -18,6 +18,7 @@ export default async function POST (url, body) {
         })
       .catch(error => {
         console.log(error.message);
+        data = error.response.data;
       });
           
       return data;

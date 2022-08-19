@@ -1,66 +1,76 @@
 <template>
-<form @submit.prevent="validateForm" class="submit-form">
+<form @submit.prevent="validateForm" v-if="render" class="submit-form">
     <span class="form-title">{{ action }} Assigned Task</span>
-    <vue-final-modal :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
-        <button class="modal__close" @click="showCreate = false" />
-        <component :is="typeCreate"  @onFormSubmit="showCreate = false; onCreate(typeToCreate)" ></component>
-    </vue-final-modal>
     <div class="errors" v-if="errors"><span v-for="error in errors">{{ error.message }}</span></div>
         <div v-for="(prop, index) in objectProps" class="form-group">
         <hr v-if="prop.name == 'targetTypeId'" />
         <span class="info" v-if="prop.name == 'targetTypeId'" >Task Filter Options</span>
             <label :class="prop.required ? 'required-field' : ''" for="{{ prop.name }}">{{ prop.label }}</label>
-            <Input :prop="prop" :object="object" v-if="prop.subOf == 'taskType'" @onOptionChange="taskTypeChange"></Input>
-            <Input :prop="prop" :object="object" v-else-if="prop.subOf == 'targetType'" @onOptionChange="targetTypeChange"></Input>
-            <Input :prop="prop" :object="object" v-else-if="prop.subOf == 'target'" @onOptionChange="targetChange"></Input>
-            <Input :prop="prop" :object="object" v-else></Input>
-            <button class="btn btn-secondary btn-inline" v-if="prop.subOf" type="button" @click="create(prop.subOf)">Create</button>
+            <Input :prop="prop" :object="object" v-if="prop.subOf == 'taskType'" @onOptionChange="taskTypeChange" @onCreate="onCreate(prop.subOf)" objectName="assignedTask"></Input>
+            <Input :prop="prop" :object="object" v-else-if="prop.subOf == 'targetType'" @onOptionChange="targetTypeChange" @onCreate="onCreate(prop.subOf)" objectName="assignedTask"></Input>
+            <Input :prop="prop" :object="object" v-else-if="prop.subOf == 'target'" @onOptionChange="targetChange" @onCreate="onCreate(prop.subOf)" objectName="assignedTask"></Input>
+            <Input :prop="prop" :object="object" v-else objectName="assignedTask"></Input>
         <hr v-if="prop.name == 'taskTypeId'" />
         <span class="info" v-if="prop.name == 'taskTypeId'" >Assigned Task Options</span>
         </div>
     <button class="btn btn-primary" type="submit">{{ action }}</button>
+    <button class="btn btn-secondary"  type="reset" @click="errors = [];" >Clear</button>
 </form>
 </template>
 <script setup>
     const props = defineProps({
-        action: String,
+        action: String, 
         onDate: String,
         currentAssignedTask: {
             type: Array,
             default: []
         }
     });
+    let objectProps = [];
+    objectProps.push({label: 'Target Type',
+                            name: 'targetTypeId',
+                            type: 'inputSelect',
+                            subOf: 'targetType',
+                            subOfSub: 'target',
+                            items : await GET("targetType"),
+                            itemDisplay : 'description'});
+    objectProps.push({label: 'Target',
+                            name: 'targetId',
+                            type: 'inputSelect',
+                            subOf: 'target',
+                            items : await GET("target"),
+                            itemDisplay : 'description'})
+    objectProps.push({label: 'Task Type',
+                            name: 'taskTypeId',
+                            type: 'inputSelect',
+                            subOf: 'taskType',
+                            subOfSub: 'task',
+                            items : await GET("taskType"),
+                            itemDisplay : 'description'});
+    objectProps = objectProps.concat(await getProperties(AssignedTask));
 </script>
 <script>
-import TargetCreate from "@/views/Target/TargetCreate.vue";
-import TargetTypeCreate from "@/views/TargetType/TargetTypeCreate.vue";
-import PersonCreate from "@/views/Person/PersonCreate.vue";
-import TaskTypeCreate from "@/views/TaskType/TaskTypeCreate.vue";
-import TaskCreate from "@/views/Task/TaskCreate.vue";
 import Input from "@/components/Input.vue";
+import Form from "@/components/Form.vue";
 import POST from "@/composables/POST";
 import GET from "@/composables/GET";
 import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import dateFunc from 'date-and-time';
-import { VueFinalModal } from 'vue-final-modal';
 import { watch, ref } from 'vue';
+import getProperties from "@/composables/getProperties.js";
+import AssignedTask from "@/types/impl/AssignedTask";
+
 
 export default  {
   name: "workflow",
   emits: ['onFormSubmit'],
-  components: { Input, TargetCreate, TargetTypeCreate, PersonCreate, TaskTypeCreate, TaskCreate, VueFinalModal },
+  components: { Input, Form },
   data() {
     return {
         render: true,
-        showCreate: false,
         typeCreate: String,
-        typeToCreate: String,
         object: {
-            type: Array,
-            default: []
-        },
-        objectProps: {
             type: Array,
             default: []
         },
@@ -72,38 +82,13 @@ export default  {
     }
   },
   methods: {
-    create(prop) {
-        this.typeCreate = prop[0].toUpperCase() + prop.slice(1) + 'Create';//Super Hacky. Do this better sometime.
-        this.typeToCreate = prop;
-        this.showCreate = true;
-    },
     async onCreate(prop) {
-        let newOptions = await GET(`${prop}/`);
+        let newOptions = await GET(`${prop}`);
         let options = "<option value='null'></option>";
         newOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + (option.description ? option.description : (option.firstName ? option.firstName + ' ' + option.lastName : option)) + "</option>";
         });
-        document.getElementById(prop + "Id").innerHTML = options;
-    },
-    async getPersons() {
-        this.personItems = await GET("person");
-        return this.personItems;
-    },
-    async getTasks() {
-        this.taskItems = await GET("task");
-        return this.taskItems;
-    },
-    async getTaskTypes() {
-        this.taskTypeItems = await GET("taskType");
-        return this.typeItems;
-    },
-    async getTargets() {
-        this.targetItems = await GET("target");
-        return this.targetItems;
-    },
-    async getTargetTypes() {
-        this.targetTypeItems = await GET("targetType");
-        return this.typeItems;
+        document.getElementById('assignedTask' + prop).innerHTML = options;
     },
     async saveObject() {
         let data = { };
@@ -129,11 +114,15 @@ export default  {
         });
 
         let result = await POST('assignedTask', data);
-        this.object.id = result.id;
-        this.objectProps.forEach((element) => {
-            this.object[element.name] = null;
-        });
-        this.$emit('onFormSubmit');
+       if (result.id) {
+            this.object.id = result.id;
+            this.objectProps.forEach((element) => {
+                this.object[element.name] = null;
+            });
+            this.$emit('onFormSubmit');
+        } else {
+            this.errors.push({message: `An Error has occurred. Does the ${this.objectName} already exist?`, property: this.object});
+        }
     },
     validateForm(e) {
         this.errors = [];
@@ -150,9 +139,6 @@ export default  {
         }
         e.preventDefault();
     },
-    refreshLists() {
-        
-    },
     async taskTypeChange() {
         if (this.object.targetId == null) {
             let taskOptions = await GET("task/type/" + this.object.taskTypeId);
@@ -160,7 +146,7 @@ export default  {
             taskOptions.forEach((option) => {
                 options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
             });
-            document.getElementById("taskId").innerHTML = options;
+            document.getElementById("assignedTasktask").innerHTML = options;
         } else {
             this.targetOrTypeChange();
         }
@@ -172,7 +158,7 @@ export default  {
             taskOptions.forEach((option) => {
                 options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
             });
-            document.getElementById("taskId").innerHTML = options;
+            document.getElementById("assignedTasktask").innerHTML = options;
         } else {
             this.targetOrTypeChange();
         }
@@ -183,7 +169,7 @@ export default  {
         targetOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
         });
-        document.getElementById("targetId").innerHTML = options;
+        document.getElementById("assignedTasktarget").innerHTML = options;
     },
     async targetOrTypeChange() {
         let taskOptions = await GET(`task/targetAndType/${this.object.targetId}/${this.object.taskTypeId}`);
@@ -191,7 +177,7 @@ export default  {
         taskOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
         });
-        document.getElementById("taskId").innerHTML = options;
+        document.getElementById("assignedTasktask").innerHTML = options;
     },
     async forceRerender() {
       this.render = false;
@@ -202,150 +188,18 @@ export default  {
     }
   },
   async beforeMount() {
-    let personOptions = await GET("person");
-    let taskTypeOptions = await GET("taskType");
-    let targetTypeOptions = await GET("targetType");
-    let targetOptions = await GET("target");
-    let taskOptions = await GET("task");
-
-    const createObjectProps = 
-                        [{label: 'Target Type',
-                            name: 'targetTypeId',
-                            type: 'inputSelect',
-                            subOf: 'targetType',
-                            subOfSub: 'target',
-                            items : targetTypeOptions,
-                            itemDisplay : 'description'},
-                        {label: 'Target',
-                            name: 'targetId',
-                            type: 'inputSelect',
-                            subOf: 'target',
-                            items : targetOptions,
-                            itemDisplay : 'description'},
-                        {label: 'Task Type',
-                            name: 'taskTypeId',
-                            type: 'inputSelect',
-                            subOf: 'taskType',
-                            subOfSub: 'task',
-                            items : taskTypeOptions,
-                            itemDisplay : 'description'},
-                        {label: 'Task',
-                            name: 'taskId',
-                            type: 'inputSelect',
-                            subOf: 'task',
-                            items : taskOptions,
-                            itemDisplay : 'description',
-                            required: true},
-                        {label: 'Assigned Person',
-                            name: 'personId',
-                            type: 'inputSelect',
-                            items : personOptions,
-                            itemDisplay : 'firstName',
-                            subOf: 'person'},
-                        {label: 'Schedule Type',
-                            name: 'type',
-                            type: 'inputSelect',
-                            items : [{name: 'DAILY'},{name: 'WEEKLY'},{name: 'MONTHLY'},{name: 'YEARLY'},{name: 'STANDALONE'}],
-                            itemDisplay : 'name',
-                            required: true},
-                        {label: 'Due Date',
-                            name: 'dueDate',
-                            type: 'inputDate',
-                            required: true,
-                            value: this.onDate},
-                        {label: 'Start Time',
-                            name: 'timeOfDay',
-                            type: 'inputTime',
-                            required: false},
-                        {label: 'End Time',
-                            name: 'endTimeOfDay',
-                            type: 'inputTime',
-                            required: false},
-                        {label: 'Occurrences',
-                            name: 'occurrences',
-                            type: 'inputNumber',
-                            required: false},
-                        {label: 'Complete',
-                            name: 'complete',
-                            type: 'inputCheck'}],
-            updateObjectProps = [{label: 'Assigned Person',
-                            name: 'personId',
-                            type: 'inputSelect',
-                            items : {
-                                type: Array,
-                                default: []
-                            },
-                            itemDisplay : 'firstName',
-                            subOf: 'person'},
-                        {label: 'Task',
-                            name: 'taskId',
-                            type: 'inputSelect',
-                            subOf: 'task',
-                            items : {
-                                type: Array,
-                                default: []
-                            },
-                            itemDisplay : 'description',
-                            required: true},
-                        {label: 'Due Date',
-                            name: 'dueDate',
-                            type: 'inputDate',
-                            required: true},
-                        {label: 'Start Time',
-                            name: 'timeOfDay',
-                            type: 'inputTime',
-                            required: false},
-                        {label: 'End Time',
-                            name: 'endTimeOfDay',
-                            type: 'inputTime',
-                            required: false},
-                        {label: 'Complete',
-                            name: 'complete',
-                            type: 'inputCheck'}],
-            updateSeriesObjectProp =
-                        [{label: 'Person',
-                            name: 'personId',
-                            type: 'inputSelect',
-                            items : {
-                                type: Array,
-                                default: []
-                            },
-                            itemDisplay : 'firstName',
-                            subOf: 'person'},
-                        {label: 'Task',
-                            name: 'taskId',
-                            type: 'inputSelect',
-                            subOf: 'task',
-                            items :  {
-                                type: Array,
-                                default: []
-                            },
-                            itemDisplay : 'description',
-                            required: true},
-                        {label: 'Start Time',
-                            name: 'timeOfDay',
-                            type: 'inputTime',
-                            required: false},
-                        {label: 'End Time',
-                            name: 'endTimeOfDay',
-                            type: 'inputTime',
-                            required: false},
-                        {label: 'Complete',
-                            name: 'complete',
-                            type: 'inputCheck'}];
-
-    this.object = [{id: null}];
-    if (this.action == "Create") {
-        this.objectProps = createObjectProps;
-    } else if (this.action == "Update") {
-        this.objectProps = updateObjectProps;
-    } else if (this.action == "Update Series") {
-        this.objectProps = updateSeriesObjectProps;
-    }
-    await this.forceRerender();
     watch(() => this.onDate, async (newDate, oldDate) => {
         this.object["dueDate"] = newDate;
     })
-  }
+    
+    
+    this.object = [{id: this.currentAssignedTask || null}];
+    this.objectProps.forEach(async (element) => {
+        this.object[element.name] = element.value || null;
+    });   
+  }, 
+  async mounted() { 
+    await this.forceRerender(); 
+  } 
 }
 </script>

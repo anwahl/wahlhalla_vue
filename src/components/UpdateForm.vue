@@ -1,5 +1,5 @@
 <template>
-  <Form v-if="currentObject" :object="currentObject" action="Update" @doOnSubmit="updateObject" :objectProps="objectProps" :objectName="objectName"></Form>
+  <Form v-if="currentObject" :object="currentObject" action="Update" @doOnSubmit="updateObject" :objectProps="objectProps" :objectName="objectName" :errors="errors"></Form>
   <button class="btn btn-secondary delete-btn" @click="deleteObject();">Delete</button>
   <Confirmation ref="confirmDialogue"></Confirmation>
 </template>
@@ -33,11 +33,15 @@ export default {
     });
     return {
         currentObject: null,
+        errors: {
+            type: Array,
+            default: []
+        }
     }
   },
   methods: {
     async getObject(id) {
-      
+      this.errors = new Array;
       this.currentObject = await GET(`${this.objectURL}/${id}`);
       for (const element in this.currentObject) {
         if (new RegExp("^[0-9]{2}:[0-9]{2}:00$").test(this.currentObject[element])) {
@@ -51,6 +55,7 @@ export default {
       };
     },
     async updateObject() {
+      this.errors = new Array;
       this.objectProps.forEach((element) => {
         if (element.type == "inputTime" && this.currentObject[element.name] != null && this.currentObject[element.name] != undefined) {
           let hours, minutes;
@@ -72,19 +77,27 @@ export default {
         }
       });
       
-      await PUT(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, this.currentObject);
-      this.$emit('onFormSubmit');
+      let result = await PUT(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`, this.currentObject);
+      if (result.success) {
+        this.$emit('onFormSubmit');
+      } else {
+        this.errors.push({message: `Error: ${result.message}`, property: this.object});
+      }
     },
     async deleteObject() {
+      this.errors = new Array;
       const ok = await this.$refs.confirmDialogue.show({
                 title: 'Delete Task(s)',
                 message: `Are you sure you want to delete the ${this.objectName}(s)? It cannot be undone.`,
                 okButton: 'Delete Forever',
             });
       if (ok) {
-          await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`);
-          
-          this.$emit('onFormSubmit');
+          let result = await DELETE(`${this.objectURL}` + (this.inSeries ? '/series' : '') + `/${this.currentObject.id}`);
+          if (result.success) {
+            this.$emit('onFormSubmit');
+          } else {
+            this.errors.push({message: `Error: ${result.message}`, property: this.object});
+          }
       }
     }
   },
