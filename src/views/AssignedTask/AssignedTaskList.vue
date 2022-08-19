@@ -64,11 +64,6 @@ export default {
     formatWord (value){
         return formatter.formatWord(value);
     }
-  },
-  data () {
-    return {
-      
-    }
   }
 };
 </script>

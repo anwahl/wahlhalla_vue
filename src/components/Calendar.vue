@@ -18,7 +18,8 @@ const events = [];
         class: (assignedTasks[element].complete ? 'green-event' : new Date(assignedTasks[element].dueDate) > new Date() ? '' : 'red-event')
     });
 };
-    
+ 
+  let objectProps = await getProperties(AssignedTask)   
 </script>
 <script>
 import VueCal from 'vue-cal';
@@ -54,7 +55,6 @@ export default {
             showSubtasks: false,
             onDate: '',
             atTime: null,
-            objectProps: getProperties(AssignedTask)
         }
     },
     components: {
