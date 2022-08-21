@@ -27,6 +27,8 @@ import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
             default: []
         }
     });
+    const emit = defineEmits(['onFormSubmit'])
+    let errors = [];
     const object = [{id: props.currentAssignedTask || null}];
     const componentKey = ref(0);
     watch(() => props['onDate'], (newDate, oldDate) => {
@@ -65,6 +67,56 @@ import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
         componentKey.value++;
     });
     
+    async function saveObject() {
+        let data = { };
+        objectProps.forEach((element) => {
+            if (element.type == "inputTime" && object[element.name] != null && object[element.name] != undefined) {
+                let hours, minutes;
+                if (object[element.name].hours < 10 && object[element.name].hours[0] != '0') {
+                    hours = '0' +  object[element.name].hours;
+                }else {
+                     hours = object[element.name].hours;
+                }
+                if (object[element.name].minutes < 10  && object[element.name].minutes[0] != '0' ) {
+                    minutes = '0' +  object[element.name].minutes;
+                } else {
+                    minutes = object[element.name].minutes;
+                }
+                data[element.name] = `${hours}:${minutes}`;
+            } else if (element.type == "inputCheck" && object[element.name] == null){
+                data[element.name] = false;
+            } else {
+                data[element.name] = object[element.name];
+            }
+        });
+
+        let result = await POST('assignedTask', data);
+       if (result.id) {
+            object.id = result.id;
+            objectProps.forEach((element) => {
+                object[element.name] = null;
+            });
+            emit('onFormSubmit');
+        } else {
+            errors.push({message: `An Error has occurred. Does the ${objectName} already exist?`, property: object});
+        }
+    }
+    
+    function validateForm(e) {
+        errors = [];
+        objectProps.forEach((prop) => {
+            if (prop.required && !object[prop.name]) {
+                errors.push({message: prop.label + " is required.", property: prop.name})
+            }
+        });
+        if (errors.length > 0) {
+            return false;
+        } else {
+            saveObject()
+            return true;
+        }
+        e.preventDefault();
+    }
 </script>
 <script>
 import Input from "@/components/Input.vue";
@@ -86,10 +138,6 @@ export default  {
     return {
         render: true,
         typeCreate: String,
-        errors: {
-            type: Array,
-            default: []
-        },
         isLoading: true
     }
   },
@@ -102,55 +150,7 @@ export default  {
         });
         document.getElementById('assignedTask' + prop).innerHTML = options;
     },
-    async saveObject() {
-        let data = { };
-        this.objectProps.forEach((element) => {
-            if (element.type == "inputTime" && this.object[element.name] != null && this.object[element.name] != undefined) {
-                let hours, minutes;
-                if (this.object[element.name].hours < 10 && this.object[element.name].hours[0] != '0') {
-                    hours = '0' +  this.object[element.name].hours;
-                }else {
-                     hours = this.object[element.name].hours;
-                }
-                if (this.object[element.name].minutes < 10  && this.object[element.name].minutes[0] != '0' ) {
-                    minutes = '0' +  this.object[element.name].minutes;
-                } else {
-                    minutes = this.object[element.name].minutes;
-                }
-                data[element.name] = `${hours}:${minutes}`;
-            } else if (element.type == "inputCheck" && this.object[element.name] == null){
-                data[element.name] = false;
-            } else {
-                data[element.name] = this.object[element.name];
-            }
-        });
-
-        let result = await POST('assignedTask', data);
-       if (result.id) {
-            this.object.id = result.id;
-            this.objectProps.forEach((element) => {
-                this.object[element.name] = null;
-            });
-            this.$emit('onFormSubmit');
-        } else {
-            this.errors.push({message: `An Error has occurred. Does the ${this.objectName} already exist?`, property: this.object});
-        }
-    },
-    validateForm(e) {
-        this.errors = [];
-        this.objectProps.forEach((prop) => {
-            if (prop.required && !this.object[prop.name]) {
-                this.errors.push({message: prop.label + " is required.", property: prop.name})
-            }
-        });
-        if (this.errors.length > 0) {
-            return false;
-        } else {
-            this.saveObject()
-            return true;
-        }
-        e.preventDefault();
-    },
+    
     async taskTypeChange() {
         if (this.object.targetId == null) {
             let taskOptions = await GET("task/type/" + this.object.taskTypeId);
