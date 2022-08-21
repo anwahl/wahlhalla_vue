@@ -1,5 +1,5 @@
 <template>
-<form @submit.prevent="validateForm" v-if="render" class="submit-form">
+<form @submit.prevent="validateForm" :key="componentKey" v-if="render" class="submit-form">
     <span class="form-title">{{ action }} Assigned Task</span>
     <div class="errors" v-if="errors"><span v-for="error in errors">{{ error.message }}</span></div>
         <div v-for="(prop, index) in objectProps" class="form-group">
@@ -18,7 +18,7 @@
 </form>
 </template>
 <script setup>
-import { watch, ref, onBeforeMount } from 'vue';
+import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
     const props = defineProps({
         action: String, 
         onDate: String,
@@ -26,6 +26,11 @@ import { watch, ref, onBeforeMount } from 'vue';
             type: Array,
             default: []
         }
+    });
+    const object = [{id: props.currentAssignedTask || null}];
+    const componentKey = ref(0);
+    watch(() => props['onDate'], (newDate, oldDate) => {
+        object["dueDate"] = newDate;
     });
     let oProps = [];
     oProps.push({label: 'Target Type',
@@ -48,18 +53,18 @@ import { watch, ref, onBeforeMount } from 'vue';
                             subOfSub: 'task',
                             items : await GET("taskType"),
                             itemDisplay : 'description'});
-    const objectProps = oProps.concat(await getProperties(AssignedTask), props['onDate']);
-    const object = [{id: props.currentAssignedTask || null}];
-      
-    onBeforeMount(async () => {
-        watch(() => props['onDate'], async (newDate, oldDate) => {
-            object["dueDate"] = newDate;
-        });
-   
-        await objectProps.forEach(async (element) => {
-            object[element.name] = await element.value || null;
+    const objectProps = oProps.concat(await getProperties(AssignedTask));
+    onBeforeMount(() => {
+        objectProps.forEach((element) => {
+            if (!object[element.name]) {
+                object[element.name] = element.value || null;
+            }
         });
     });
+    onBeforeUpdate(() => {
+        componentKey.value++;
+    });
+    
 </script>
 <script>
 import Input from "@/components/Input.vue";
@@ -194,8 +199,6 @@ export default  {
       this.isLoading = false;
     }
   },
-  async beforeMount() {
-  }, 
   async mounted() { 
     await this.forceRerender(); 
   } 
