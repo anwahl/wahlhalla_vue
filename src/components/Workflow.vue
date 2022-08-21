@@ -117,6 +117,51 @@ import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
         }
         e.preventDefault();
     }
+
+
+    async function taskTypeChange() {
+        if (object['targetId'] == null) {
+            let taskOptions = await GET("task/type/" + object['taskTypeId']);
+            let options = "<option></option>";
+            taskOptions.forEach((option) => {
+                options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
+            });
+            document.getElementById("assignedTasktask").innerHTML = options;
+        } else {
+            targetOrTypeChange();
+        }
+    };
+
+    async function targetChange() {
+        if (object['taskTypeId'] == null) {
+            let taskOptions = await GET("task/target/" + object['targetId']);
+            let options = "<option></option>";
+            taskOptions.forEach((option) => {
+                options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
+            });
+            document.getElementById("assignedTasktask").innerHTML = options;
+        } else {
+            targetOrTypeChange();
+        }
+    };
+
+    async function targetTypeChange() {
+        let targetOptions = await GET("target/type/" + object['targetTypeId']);
+        let options = "<option></option>";
+        targetOptions.forEach((option) => {
+            options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
+        });
+        document.getElementById("assignedTasktarget").innerHTML = options;
+    };
+
+    async function targetOrTypeChange() {
+        let taskOptions = await GET(`task/targetAndType/${object['targetId']}/${object.taskTypeId}`);
+        let options = "<option></option>";
+        taskOptions.forEach((option) => {
+            options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
+        });
+        document.getElementById("assignedTasktask").innerHTML = options;
+    };
 </script>
 <script>
 import Input from "@/components/Input.vue";
@@ -149,47 +194,6 @@ export default  {
             options = options + "<option value='" + option.id +"'>" + (option.description ? option.description : (option.firstName ? option.firstName + ' ' + option.lastName : option)) + "</option>";
         });
         document.getElementById('assignedTask' + prop).innerHTML = options;
-    },
-    
-    async taskTypeChange() {
-        if (this.object.targetId == null) {
-            let taskOptions = await GET("task/type/" + this.object.taskTypeId);
-            let options = "<option></option>";
-            taskOptions.forEach((option) => {
-                options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
-            });
-            document.getElementById("assignedTasktask").innerHTML = options;
-        } else {
-            this.targetOrTypeChange();
-        }
-    },
-    async targetChange() {
-        if (this.object.taskTypeId == null) {
-            let taskOptions = await GET("task/target/" + this.object.targetId);
-            let options = "<option></option>";
-            taskOptions.forEach((option) => {
-                options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
-            });
-            document.getElementById("assignedTasktask").innerHTML = options;
-        } else {
-            this.targetOrTypeChange();
-        }
-    },
-    async targetTypeChange() {
-        let targetOptions = await GET("target/type/" + this.object.targetTypeId);
-        let options = "<option></option>";
-        targetOptions.forEach((option) => {
-            options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
-        });
-        document.getElementById("assignedTasktarget").innerHTML = options;
-    },
-    async targetOrTypeChange() {
-        let taskOptions = await GET(`task/targetAndType/${this.object.targetId}/${this.object.taskTypeId}`);
-        let options = "<option></option>";
-        taskOptions.forEach((option) => {
-            options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
-        });
-        document.getElementById("assignedTasktask").innerHTML = options;
     },
     async forceRerender() {
       this.render = false;
