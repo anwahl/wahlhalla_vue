@@ -19,7 +19,7 @@ const events = [];
     });
 };
  
-  let objectProps = await getProperties(AssignedTask)   
+  let objectProps = [];   
 </script>
 <script>
 import VueCal from 'vue-cal';
@@ -166,6 +166,9 @@ export default {
                 this.$emit('updateEvents');
             }
         }
+    },
+    async beforeMount() {
+        this.objectProps =  await getProperties(AssignedTask);
     },
     mounted() {
         this.isLoading = false;
