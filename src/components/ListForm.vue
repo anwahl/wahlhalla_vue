@@ -121,6 +121,7 @@ export default {
     });
     this.tabulator.on('rowClick', (e, row) => {
             this.setActiveObject(row.getData(), row.getIndex());
+            console.log(row.getIndex);
     });
     
     this.isLoading = false;
