@@ -18,6 +18,7 @@
 </form>
 </template>
 <script setup>
+import { watch, ref, onBeforeMount } from 'vue';
     const props = defineProps({
         action: String, 
         onDate: String,
@@ -47,10 +48,18 @@
                             subOfSub: 'task',
                             items : await GET("taskType"),
                             itemDisplay : 'description'});
-    const objectProps = oProps.concat(await getProperties(AssignedTask));
+    const objectProps = oProps.concat(await getProperties(AssignedTask), props['onDate']);
     const object = [{id: props.currentAssignedTask || null}];
       
-    
+    onBeforeMount(async () => {
+        watch(() => props['onDate'], async (newDate, oldDate) => {
+            object["dueDate"] = newDate;
+        });
+   
+        await objectProps.forEach(async (element) => {
+            object[element.name] = await element.value || null;
+        });
+    });
 </script>
 <script>
 import Input from "@/components/Input.vue";
@@ -60,7 +69,6 @@ import GET from "@/composables/GET";
 import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import dateFunc from 'date-and-time';
-import { watch, ref } from 'vue';
 import getProperties from "@/composables/getProperties.js";
 import AssignedTask from "@/types/impl/AssignedTask";
 
@@ -187,13 +195,6 @@ export default  {
     }
   },
   async beforeMount() {
-    watch(() => this.onDate, async (newDate, oldDate) => {
-        this.object["dueDate"] = newDate;
-    })
-    
-    await this.objectProps.forEach(async (element) => {
-        this.object[element.name] = await element.value || null;
-    });
   }, 
   async mounted() { 
     await this.forceRerender(); 
