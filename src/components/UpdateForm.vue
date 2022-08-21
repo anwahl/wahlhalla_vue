@@ -32,7 +32,7 @@ export default {
       currentObject[element.name] = null
     });
     return {
-        currentObject: null,
+        currentObject,
         errors: {
             type: Array,
             default: []
