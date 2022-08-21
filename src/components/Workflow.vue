@@ -48,6 +48,11 @@
                             items : await GET("taskType"),
                             itemDisplay : 'description'});
     objectProps = objectProps.concat(await getProperties(AssignedTask));
+
+    const object = [{id: props.currentAssignedTask || null}];
+    objectProps.forEach(async (element) => {
+        object[element.name] = element.value || null;
+    });  
 </script>
 <script>
 import Input from "@/components/Input.vue";
@@ -70,10 +75,6 @@ export default  {
     return {
         render: true,
         typeCreate: String,
-        object: {
-            type: Array,
-            default: []
-        },
         errors: {
             type: Array,
             default: []
@@ -193,10 +194,7 @@ export default  {
     })
     
     
-    this.object = [{id: this.currentAssignedTask || null}];
-    this.objectProps.forEach(async (element) => {
-        this.object[element.name] = element.value || null;
-    });   
+     
   }, 
   async mounted() { 
     await this.forceRerender(); 
