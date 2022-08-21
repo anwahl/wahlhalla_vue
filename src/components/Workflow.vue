@@ -1,5 +1,5 @@
 <template>
-<form @submit.prevent="validateForm" v-if="render" class="submit-form">
+<form @submit.prevent="validateForm" :key="componentKey" v-if="render" class="submit-form">
     <span class="form-title">{{ action }} Assigned Task</span>
     <div class="errors" v-if="errors"><span v-for="error in errors">{{ error.message }}</span></div>
         <div v-for="(prop, index) in objectProps" class="form-group">
@@ -18,6 +18,7 @@
 </form>
 </template>
 <script setup>
+import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
     const props = defineProps({
         action: String, 
         onDate: String,
@@ -26,28 +27,44 @@
             default: []
         }
     });
-    let objectProps = [];
-    objectProps.push({label: 'Target Type',
+    const object = [{id: props.currentAssignedTask || null}];
+    const componentKey = ref(0);
+    watch(() => props['onDate'], (newDate, oldDate) => {
+        object["dueDate"] = newDate;
+    });
+    let oProps = [];
+    oProps.push({label: 'Target Type',
                             name: 'targetTypeId',
                             type: 'inputSelect',
                             subOf: 'targetType',
                             subOfSub: 'target',
                             items : await GET("targetType"),
                             itemDisplay : 'description'});
-    objectProps.push({label: 'Target',
+    oProps.push({label: 'Target',
                             name: 'targetId',
                             type: 'inputSelect',
                             subOf: 'target',
                             items : await GET("target"),
                             itemDisplay : 'description'})
-    objectProps.push({label: 'Task Type',
+    oProps.push({label: 'Task Type',
                             name: 'taskTypeId',
                             type: 'inputSelect',
                             subOf: 'taskType',
                             subOfSub: 'task',
                             items : await GET("taskType"),
                             itemDisplay : 'description'});
-    objectProps = objectProps.concat(await getProperties(AssignedTask));
+    const objectProps = oProps.concat(await getProperties(AssignedTask));
+    onBeforeMount(() => {
+        objectProps.forEach((element) => {
+            if (!object[element.name]) {
+                object[element.name] = element.value || null;
+            }
+        });
+    });
+    onBeforeUpdate(() => {
+        componentKey.value++;
+    });
+    
 </script>
 <script>
 import Input from "@/components/Input.vue";
@@ -57,7 +74,6 @@ import GET from "@/composables/GET";
 import PUT from "@/composables/PUT";
 import DELETE from "@/composables/DELETE";
 import dateFunc from 'date-and-time';
-import { watch, ref } from 'vue';
 import getProperties from "@/composables/getProperties.js";
 import AssignedTask from "@/types/impl/AssignedTask";
 
@@ -70,10 +86,6 @@ export default  {
     return {
         render: true,
         typeCreate: String,
-        object: {
-            type: Array,
-            default: []
-        },
         errors: {
             type: Array,
             default: []
@@ -187,17 +199,6 @@ export default  {
       this.isLoading = false;
     }
   },
-  async beforeMount() {
-    watch(() => this.onDate, async (newDate, oldDate) => {
-        this.object["dueDate"] = newDate;
-    })
-    
-    
-    this.object = [{id: this.currentAssignedTask || null}];
-    this.objectProps.forEach(async (element) => {
-        this.object[element.name] = element.value || null;
-    });   
-  }, 
   async mounted() { 
     await this.forceRerender(); 
   } 
