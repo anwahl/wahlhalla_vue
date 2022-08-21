@@ -17,6 +17,7 @@ export default async function GET (url) {
     })
   .catch(error => {
     console.log(error.message);
+    data = error.response.data;
   });
       
   return data;

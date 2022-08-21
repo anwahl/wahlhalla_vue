@@ -3,36 +3,7 @@
     objectURL="assignedTask"
     childComponent='AssignedTask'
     childCreateComponent='AssignedTaskCreate'
-    :objectProps="[{label: 'Assigned Person',
-                    name: 'firstName',
-                    subOf: 'person'},
-                    {label: 'Task',
-                    name: 'description',
-                    subOf: 'task'},
-                    {label: 'Target',
-                    name: 'description',
-                    subOf: 'target',
-                    subOfSub: 'task'},
-                    {label: 'Type',
-                    name: 'type',
-                    formatter: this.formatWord},
-                    {label: 'Due Date',
-                    name: 'dueDate',
-                    formatter: this.formatDate},
-                    {label: 'Time',
-                    name: 'timeOfDay',
-                    formatter: this.formatTime},
-                    {label: 'End Time',
-                    name: 'endTimeOfDay',
-                    formatter: this.formatTime},
-                    {label: 'Occurrences',
-                    name: 'occurrences'},
-                    {label: 'Value',
-                    name: 'value',
-                    subOf: 'task',
-                    formatter: this.formatMoney},
-                    {label: 'Complete',
-                    name: 'complete'}]"
+    :objectProps="properties"
     :displayProps="[{label: 'Assigned Person',
                     name: 'person.firstName'},
                     {label: 'Task',
@@ -59,6 +30,8 @@
 <script>
 import ListForm from "@/components/ListForm.vue";
 import * as formatter from "@/composables/cellFormatter.js";
+import getProperties from "@/composables/getProperties.js";
+import AssignedTask from "@/types/impl/AssignedTask";
 
 export default {
   name: "assignedTask-list",
@@ -93,4 +66,7 @@ export default {
     }
   }
 };
+</script>
+<script setup>
+  let properties = await getProperties(AssignedTask)
 </script>

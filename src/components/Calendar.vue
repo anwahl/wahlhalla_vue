@@ -18,21 +18,24 @@ const events = [];
         class: (assignedTasks[element].complete ? 'green-event' : new Date(assignedTasks[element].dueDate) > new Date() ? '' : 'red-event')
     });
 };
-    
+ 
+  let objectProps = await getProperties(AssignedTask)   
 </script>
 <script>
 import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css';
 import { VueFinalModal } from 'vue-final-modal';
-import AssignedTask from "@/views/AssignedTask/AssignedTask.vue";
 import SubtaskList from "@/views/Subtask/SubtaskList.vue";
-import AssignedTaskCreate from "@/views/AssignedTask/AssignedTaskCreate.vue";
 import ObjectCard from "@/components/ObjectCard.vue";
 import * as formatter from "@/composables/cellFormatter.js";
 import PUT from "@/composables/PUT";
 import dateFunc from 'date-and-time';
 import Confirmation from '../components/Confirmation.vue'
 import Workflow from "@/components/Workflow.vue";
+import UpdateForm from "@/components/UpdateForm.vue";
+import getProperties from "@/composables/getProperties.js";
+import AssignedTask from "@/types/impl/AssignedTask";
+
 
 export default {
     name: 'calendar',
@@ -52,40 +55,10 @@ export default {
             showSubtasks: false,
             onDate: '',
             atTime: null,
-            objectProps: [{label: 'Person',
-                        name: 'firstName',
-                        subOf: 'person'},
-                        {label: 'Task',
-                        name: 'description',
-                        subOf: 'task'},
-                        {label: 'Target',
-                        name: 'description',
-                        subOf: 'target',
-                        subOfSub: 'task'},
-                        {label: 'Type',
-                        name: 'type',
-                        formatter: this.formatWord},
-                        {label: 'Due Date',
-                        name: 'dueDate',
-                        formatter: this.formatDate},
-                        {label: 'Time',
-                        name: 'timeOfDay',
-                        formatter: this.formatTime},
-                        {label: 'End Time',
-                        name: 'endTimeOfDay',
-                        formatter: this.formatTime},
-                        {label: 'Value',
-                        name: 'value',
-                        subOf: 'task',
-                        formatter: this.formatMoney},
-                        {label: 'Occurrences',
-                        name: 'occurrences'},
-                        {label: 'Complete',
-                        name: 'complete'}]
         }
     },
     components: {
-       VueCal, VueFinalModal, AssignedTaskCreate, AssignedTask, SubtaskList, ObjectCard, Confirmation, Workflow
+       UpdateForm, VueCal, VueFinalModal, SubtaskList, ObjectCard, Confirmation, Workflow
     },
     methods: {
         async onEventClick(event, e) {
@@ -230,12 +203,23 @@ export default {
         <span v-if="currentAssignedTask">
             <vue-final-modal :lock-scroll="false" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showEdit = false" />
-                <AssignedTask :objectId="currentAssignedTask.id"  @onFormSubmit="showEdit = false; refreshList()" />
+                <UpdateForm 
+                        :objectId="currentAssignedTask.id"  
+                        @onFormSubmit="showEdit = false; refreshList()"
+                        :objectProps="objectProps"
+                        objectURL="assignedTask"
+                        objectName="Assigned Task" />
             </vue-final-modal>
             <button class="btn btn-primary" @click="showEdit= true">Edit</button>
             <vue-final-modal :lock-scroll="false" v-model="showSeriesEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
                 <button class="modal__close" @click="showSeriesEdit = false" />
-                <AssignedTask :inSeries="true" :objectId="currentAssignedTask.id"  @onFormSubmit="showSeriesEdit = false; refreshList()" />
+                <UpdateForm 
+                        :inSeries="true"
+                        :objectId="currentAssignedTask.id" 
+                        @onFormSubmit="showSeriesEdit = false; refreshList()"
+                        :objectProps="objectProps"
+                        objectURL="assignedTask"
+                        objectName="Assigned Task" />
             </vue-final-modal>
             <button class="btn btn-secondary" @click="showSeriesEdit= true" v-if="currentAssignedTask.type != 'STANDALONE'">Edit Series</button>
             <vue-final-modal :lock-scroll="false" @closed="refreshList()" v-model="showSubtasks" :esc-to-close="true" classes="modal-container" content-class="modal-content">

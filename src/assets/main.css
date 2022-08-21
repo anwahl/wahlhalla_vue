@@ -119,6 +119,10 @@ form ~ button.btn.delete-btn{
   font-weight: bold;
 }
 
+.errors.form-errors {
+  font-size: 16px;
+}
+
 .errors > span {
   display: block;
   font-weight: bold;

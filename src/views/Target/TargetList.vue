@@ -3,9 +3,7 @@
     objectURL="target"
     childComponent='Target'
     childCreateComponent='TargetCreate'
-    :objectProps="[{label : 'Description', name : 'description'},
-                    {label : 'Type', name : 'description',
-                     subOf: 'targetType'}]"
+    :objectProps="properties"
     :displayProps="[{label : 'Description',
                     name : 'description'},
                     {label : 'Type',
@@ -16,9 +14,14 @@
 </template>
 <script>
 import ListForm from "@/components/ListForm.vue";
+import getProperties from "@/composables/getProperties.js";
+import Target from "@/types/impl/Target";
 
 export default {
   name: "target-list",
   components: { ListForm }
 };
+</script>
+<script setup>
+  let properties = await getProperties(Target)
 </script>

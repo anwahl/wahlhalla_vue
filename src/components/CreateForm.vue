@@ -1,5 +1,11 @@
 <template>
-  <Form :object="object" action="Create" @doOnSubmit="saveObject" :objectProps="objectProps" :objectName="objectName"></Form>
+  <Form 
+      :object="object"
+      action="Create"
+      @doOnSubmit="saveObject"
+      :objectProps="objectProps"
+      :objectName="objectName.valueOf()"
+      :errors="errors"></Form>
 </template>
 <script>
 import Form from "@/components/Form.vue";
@@ -12,27 +18,28 @@ export default  {
   data() {
     let object = { id: null };
     this.objectProps.forEach((element) => {
-        if (element.value != null) {
-          object[element.name] = element.value;
-        } else {
-          object[element.name] = null
-        }
+          object[element.name] = element.value || null;
     });
     return {
-        object
+        object,
+        errors: {
+            type: Array,
+            default: []
+        }
     }
   },
   props: {
-    objectURL: String,
+    objectURL: String | Function,
     objectProps: {
         type: Array,
         default: []
     },
-    objectName: String
+    objectName: String | Function,
   },
   methods: {
       async saveObject() {
           let data = { };
+          this.errors = new Array;
           this.objectProps.forEach((element) => {
               if (element.type == "inputTime" && this.object[element.name] != null && this.object[element.name] != undefined) {
                 let hours, minutes;
@@ -53,17 +60,17 @@ export default  {
                 data[element.name] = this.object[element.name];
               }
           });
-
           let result = await POST(this.objectURL, data);
-          this.object.id = result.id;
-          this.objectProps.forEach((element) => {
-              this.object[element.name] = null;
-          });
-          this.$emit('onFormSubmit');
+          if (result.id) {
+              this.object.id = result.id;
+              this.objectProps.forEach((element) => {
+                  this.object[element.name] = element.value || null;
+              });
+              this.$emit('onFormSubmit');
+          } else {
+              this.errors.push({message: `Error: ${result.message}`, property: this.object});
+          }
     }
-  },
-  mounted () {
-       
   }
 }
 </script>

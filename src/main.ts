@@ -1,4 +1,4 @@
-import { createApp, defineAsyncComponent } from "vue";
+import { createApp } from "vue";
 import Loading from "@/components/Loading.vue";
 import ErrorComponent from "@/components/Error.vue";
 import { createAuth0 } from '@auth0/auth0-vue';
@@ -18,6 +18,11 @@ if (import.meta.env.VITE_ENV === "production") {
         audience: import.meta.env.VITE_AUDIENCE
     })) 
 }
+
+app.config.errorHandler = (err, instance, info) => {
+    console.error(err);
+    router.push({ name: 'error', params: { error: JSON.stringify(err) }  });
+  }
 
 app
     .use(router)
