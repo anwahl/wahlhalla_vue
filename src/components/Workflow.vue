@@ -48,11 +48,9 @@
                             items : await GET("taskType"),
                             itemDisplay : 'description'});
     objectProps = objectProps.concat(await getProperties(AssignedTask));
-
     const object = [{id: props.currentAssignedTask || null}];
-    objectProps.forEach(async (element) => {
-        object[element.name] = element.value || null;
-    });  
+      
+    
 </script>
 <script>
 import Input from "@/components/Input.vue";
@@ -193,8 +191,9 @@ export default  {
         this.object["dueDate"] = newDate;
     })
     
-    
-     
+    await this.objectProps.forEach(async (element) => {
+        this.object[element.name] = await element.value || null;
+    });
   }, 
   async mounted() { 
     await this.forceRerender(); 
