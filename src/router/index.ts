@@ -56,24 +56,6 @@ const router = createRouter({
       beforeEnter: (import.meta.env.VITE_ENV === "production" ? authGuard : undefined)
     },
     {
-      path: "/person/:id",
-      name: "person-details",
-      component: () => import("@/views/Person/Person.vue"),
-      beforeEnter: (import.meta.env.VITE_ENV === "production" ? authGuard : undefined)
-    },
-    {
-      path: "/person/create",
-      name: "person-create",
-      component: () => import("@/views/Person/PersonCreate.vue"),
-      beforeEnter: (import.meta.env.VITE_ENV === "production" ? authGuard : undefined)
-    },
-    {
-      path: "/task/create",
-      name: "task-create",
-      component: () => import("@/views/Task/TaskCreate.vue"),
-      beforeEnter: (import.meta.env.VITE_ENV === "production" ? authGuard : undefined)
-    },
-    {
       path: "/targetTypes",
       name: "targetType-list",
       component: () => { return import("@/views/TargetType/TargetTypeList.vue") }, 

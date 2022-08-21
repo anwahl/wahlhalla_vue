@@ -6,6 +6,8 @@
         Wahlhalla has encountered an error: <span class="errors">{{ error }}</span>
       </div>
     </div>
+    <button class="btn btn-primary" @click="$router.go(-1)">Go Back</button>
+    <button class="btn btn-secondary" @click="$router.push('/')">Go Home</button>
   </div>
 </template>
 <script>

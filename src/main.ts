@@ -20,9 +20,9 @@ if (import.meta.env.VITE_ENV === "production") {
 }
 
 app.config.errorHandler = (err, instance, info) => {
-    console.error(err);
-    router.push({ name: 'error', params: { error: JSON.stringify(err) }  });
-  }
+    // @ts-ignore
+    router.push({ name: 'error', params: { error: JSON.stringify(err.message) }  });
+};
 
 app
     .use(router)
