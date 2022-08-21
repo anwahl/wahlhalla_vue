@@ -19,7 +19,7 @@ const events = [];
     });
 };
  
-  let objectProps = [];   
+const objectProps = await getProperties(AssignedTask)   
 </script>
 <script>
 import VueCal from 'vue-cal';
@@ -167,9 +167,6 @@ export default {
             }
         }
     },
-    async beforeMount() {
-        this.objectProps =  await getProperties(AssignedTask);
-    },
     mounted() {
         this.isLoading = false;
     }
@@ -184,7 +181,7 @@ export default {
     <vue-final-modal :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCreate = false" type="button" />
         <!--<AssignedTaskCreate v-if="showCreate" :onDate="onDate" :atTime="atTime" @onFormSubmit="showCreate = false; refreshList()" />-->
-        <Workflow action="Create" :onDate="onDate" @onFormSubmit="showCreate = false; refreshList()" :oProps="objectProps"> </Workflow>
+        <Workflow action="Create" :onDate="onDate" @onFormSubmit="showCreate = false; refreshList()"> </Workflow>
     </vue-final-modal>
     <div class="">
         <vue-cal style="height: 80vh; " :events="events" 
