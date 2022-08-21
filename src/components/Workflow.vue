@@ -26,28 +26,28 @@
             default: []
         }
     });
-    let objectProps = [];
-    objectProps.push({label: 'Target Type',
+    let oProps = [];
+    oProps.push({label: 'Target Type',
                             name: 'targetTypeId',
                             type: 'inputSelect',
                             subOf: 'targetType',
                             subOfSub: 'target',
                             items : await GET("targetType"),
                             itemDisplay : 'description'});
-    objectProps.push({label: 'Target',
+    oProps.push({label: 'Target',
                             name: 'targetId',
                             type: 'inputSelect',
                             subOf: 'target',
                             items : await GET("target"),
                             itemDisplay : 'description'})
-    objectProps.push({label: 'Task Type',
+    oProps.push({label: 'Task Type',
                             name: 'taskTypeId',
                             type: 'inputSelect',
                             subOf: 'taskType',
                             subOfSub: 'task',
                             items : await GET("taskType"),
                             itemDisplay : 'description'});
-    objectProps = objectProps.concat(await getProperties(AssignedTask));
+    const objectProps = oProps.concat(await getProperties(AssignedTask));
     const object = [{id: props.currentAssignedTask || null}];
       
     
