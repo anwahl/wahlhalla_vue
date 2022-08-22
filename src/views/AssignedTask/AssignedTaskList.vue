@@ -51,18 +51,6 @@ export default {
     },
     formatWordCell (cell){
         return formatter.formatWord(cell.getValue());
-    },
-    formatTime (value){
-        return formatter.formatTime(value);
-    },
-    formatDate (value){
-        return formatter.formatDate(value);
-    },
-    formatMoney (value){
-        return formatter.formatMoney(value);
-    },
-    formatWord (value){
-        return formatter.formatWord(value);
     }
   }
 };

@@ -7,7 +7,8 @@
     :displayProps="[{label : 'Description',
                     name : 'description'},
                     {label : 'Category',
-                    name : 'category'}]"
+                    name : 'category',
+                    formatter : this.formatWordCell}]"
     searchByURL='description'
     objectName="Task Type"
   />
@@ -16,10 +17,17 @@
 import ListForm from "@/components/ListForm.vue";
 import getProperties from "@/composables/getProperties.js";
 import TaskType from "@/types/impl/TaskType";
+import * as formatter from "@/composables/cellFormatter.js";
+
 
 export default {
   name: "taskType-list",
-  components: { ListForm }
+  components: { ListForm },
+  methods: {
+    formatWordCell (cell){
+        return formatter.formatWord(cell.getValue());
+    }
+  }
 };
 </script>
 <script setup>

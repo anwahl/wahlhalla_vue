@@ -3,7 +3,7 @@ export function formatTime (value) {
     if (value != '' && value != null) {
         let hours = value.split(':')[0];
         let minutes = value.split(':')[1];
-        let ampm = hours >= 12 ? 'PM' : 'PM';
+        let ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12;
         hours = hours ? hours : 12;
         time = hours + ':' + minutes + ' ' + ampm;

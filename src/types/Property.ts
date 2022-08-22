@@ -10,4 +10,5 @@ export default interface Property {
     value?: String | Number | null;
     subOf?: String;
     subOfSub?: String;
+    formatter?: Function
 }

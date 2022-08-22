@@ -1,6 +1,7 @@
 <script setup>
 import GET from "@/composables/GET";
 import { reactive, toRefs } from "vue";
+import * as formatter from "@/composables/cellFormatter.js";
 const props = defineProps({
   category: String,
 });
@@ -27,7 +28,6 @@ import 'vue-cal/dist/vuecal.css';
 import { VueFinalModal } from 'vue-final-modal';
 import SubtaskList from "@/views/Subtask/SubtaskList.vue";
 import ObjectCard from "@/components/ObjectCard.vue";
-import * as formatter from "@/composables/cellFormatter.js";
 import PUT from "@/composables/PUT";
 import dateFunc from 'date-and-time';
 import Confirmation from '../components/Confirmation.vue'
@@ -196,7 +196,17 @@ export default {
                         :on-event-click="onEventClick"
                         @cell-click="onCellClick"
                         activeView="month"
-                        class="" />
+                        class="" >
+                <template #event="{ event, view }">
+
+                        <div class="vuecal__event-title" v-html="event.title" />
+                        
+                        <small v-if="new Date(event.start).getHours() != '0'" class="vuecal__event-time">
+                            <strong>From:</strong> <span>{{ event.start.formatTime("hh:mm am") }}</span><br/>
+                            <strong>To:</strong> <span>{{ event.end.formatTime("hh:mm am") }}</span>
+                        </small>
+                </template>
+        </vue-cal>
     </div>
     <vue-final-modal :lock-scroll="false" v-model="showCurrentAssignedTask" :esc-to-close="true" classes="modal-container" content-class="modal-content">
         <button class="modal__close" @click="showCurrentAssignedTask = false" />
