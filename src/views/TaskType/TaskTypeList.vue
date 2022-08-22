@@ -8,7 +8,7 @@
                     name : 'description'},
                     {label : 'Category',
                     name : 'category',
-                    formatter : this.formatWordCell}]"
+                    formatter : formatWordCell}]"
     searchByURL='description'
     objectName="Task Type"
   />

@@ -10,19 +10,19 @@
                     name: 'task.description'},
                     {label: 'Type',
                     name: 'type',
-                    formatter: this.formatWordCell},
+                    formatter: formatWordCell},
                     {label: 'Due Date',
                     name: 'dueDate',
-                    formatter: this.formatDateCell},
+                    formatter: formatDateCell},
                     {label: 'Time',
                     name: 'timeOfDay',
-                    formatter: this.formatTimeCell},
+                    formatter: formatTimeCell},
                     {label: 'Value',
                     name: 'task.value',
-                    formatter: this.formatMoneyCell},
+                    formatter: formatMoneyCell},
                     {label: 'Complete',
                     name: 'complete',
-                    formatter: this.formatCompletionCell}]"
+                    formatter: formatCompletionCell}]"
     searchByURL='assignedTask'
     objectName="Assigned Task"
   />
