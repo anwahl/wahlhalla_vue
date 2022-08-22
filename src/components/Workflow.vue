@@ -155,7 +155,7 @@ import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
     };
 
     async function targetOrTypeChange() {
-        let taskOptions = await GET(`task/targetAndType/${object['targetId']}/${object.taskTypeId}`);
+        let taskOptions = await GET(`task/targetAndType/${object['targetId']}/${object['taskTypeId']}`);
         let options = "<option></option>";
         taskOptions.forEach((option) => {
             options = options + "<option value='" + option.id +"'>" + option.description + "</option>";
