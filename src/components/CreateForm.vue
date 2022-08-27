@@ -18,7 +18,11 @@ export default  {
   data() {
     let object = { id: null };
     this.objectProps.forEach((element) => {
-          object[element.name] = element.value || null;
+          if (element.name == this.byObject) {
+            object[element.name] = this.byObjectId;
+           } else { 
+            object[element.name] = element.value || null;
+           }
     });
     return {
         object,
@@ -35,6 +39,8 @@ export default  {
         default: []
     },
     objectName: String | Function,
+    byObjectId: [String, Number],
+    byObject: String
   },
   methods: {
       async saveObject() {

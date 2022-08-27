@@ -12,8 +12,9 @@ export default async function DELETE (url) {
     }
   })
   .then(response => {
-    data = response.data;
-    console.log(data);
+      data = response.data;
+      if (import.meta.env.VITE_ENV != "production")
+          console.log(data);
     })
   .catch(error => {
     console.log(error.message);

@@ -7,6 +7,8 @@ export default interface Property {
     items?: Array<{}>;
     itemDisplay?: String;
     itemSubOf?: String
+    itemSubOfSub? : String;
+    itemSubDisplay? : String;
     value?: String | Number | null;
     subOf?: String;
     subOfSub?: String;

@@ -1,5 +1,33 @@
 <template>
-  <ListForm
+  <SpecialTaskListForm v-if="byCategory"
+    :getURL="'assignedTask/category/'+byCategory"
+    objectURL="assignedTask"
+    childComponent='AssignedTask'
+    childCreateComponent='AssignedTaskCreate'
+    :objectProps="properties"
+    :displayProps="[{label: 'Assigned Person',
+                    name: 'person.firstName'},
+                    {label: 'Task',
+                    name: 'task.description'},
+                    {label: 'Type',
+                    name: 'type',
+                    formatter: formatWordCell},
+                    {label: 'Due Date',
+                    name: 'dueDate',
+                    formatter: formatDateCell},
+                    {label: 'Time',
+                    name: 'timeOfDay',
+                    formatter: formatTimeCell},
+                    {label: 'Value',
+                    name: 'task.value',
+                    formatter: formatMoneyCell},
+                    {label: 'Complete',
+                    name: 'complete',
+                    formatter: formatCompletionCell}]"
+    searchByURL='assignedTask'
+    objectName="Assigned Task"
+  />
+  <ListForm v-else
     objectURL="assignedTask"
     childComponent='AssignedTask'
     childCreateComponent='AssignedTaskCreate'
@@ -29,13 +57,17 @@
 </template>
 <script>
 import ListForm from "@/components/ListForm.vue";
+import SpecialTaskListForm from "@/components/SpecialTaskListForm.vue";
 import * as formatter from "@/composables/cellFormatter.js";
 import getProperties from "@/composables/getProperties.js";
 import AssignedTask from "@/types/impl/AssignedTask";
 
 export default {
   name: "assignedTask-list",
-  components: { ListForm },
+  components: { ListForm, SpecialTaskListForm },
+  props: {
+    byCategory: String
+  },
   methods: {
     formatTimeCell (cell){
         return formatter.formatTime(cell.getValue());

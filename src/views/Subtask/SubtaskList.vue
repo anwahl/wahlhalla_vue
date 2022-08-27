@@ -11,6 +11,7 @@
     searchByURL='description'
     objectName="Subtask"
     :byObjectId="byAssignedTask"
+    byObject="assignedTaskId"
   />
 </template>
 <script>

@@ -13,8 +13,9 @@ export default async function POST (url, body) {
         data: JSON.stringify(body)
       })
       .then(response => {
-        data = response.data;
-        console.log(data);
+          data = response.data;
+          if (import.meta.env.VITE_ENV != "production")
+              console.log(data);
         })
       .catch(error => {
         console.log(error.message);

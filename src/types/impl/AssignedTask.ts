@@ -40,6 +40,8 @@ export default class AssignedTask implements AssignedTaskInterface{
         subOf: 'task',
         items : undefined,
         itemDisplay : 'description',
+        itemSubOfSub : 'target',
+        itemSubDisplay : 'description',
         required: true,
         updatable: true};
     type = {label: 'Type',

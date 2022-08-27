@@ -2,38 +2,37 @@
   <div  class="list row">
     <Loading v-if="isLoading"></Loading>
   </div>
-  <div class="list row list-view">
-    <div class="col col-lg-12" >
-      <span v-if="currentObject">
-          <h4>{{ objectName }}
-              <vue-final-modal :lock-scroll="false" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
-                  <button class="modal__close" @click="showEdit = false" />
-                  <UpdateForm 
-                      :objectId="currentObject.id"
-                      @onFormSubmit="showEdit = false; refreshList()"
-                      :objectProps="objectProps"
-                      :objectURL="objectURL"
-                      :objectName="objectName" />
-              </vue-final-modal>
-              <button class="btn btn-primary" @click="showEdit = true">Edit</button>
-              <button class="btn btn-secondary" @click="currentObject = null">Close</button>
-          </h4>
+  <span v-if="currentObject">
+    <div class="row">
+      <div class="col col-lg-5" >
+          <vue-final-modal :lock-scroll="false" v-model="showEdit" :esc-to-close="true" classes="modal-container" content-class="modal-content">
+              <button class="modal__close" @click="showEdit = false" />
+              <UpdateForm 
+                  :objectId="currentObject.id"
+                  @onFormSubmit="showEdit = false; refreshList()"
+                  :objectProps="objectProps"
+                  :objectURL="objectURL"
+                  :objectName="objectName" />
+          </vue-final-modal>
+          <button class="btn btn-primary" @click="showEdit = true">Edit</button>
+          <button class="btn btn-secondary" @click="currentObject = null">Close</button>
           <ObjectCard :objectProps="objectProps" :currentObject="currentObject" ></ObjectCard>
-      </span>
+        </div>
+        <div class="col col-lg-7" >
+          <component is="SubtaskList" :key="subtaskKey" :byAssignedTask="currentObject.id" />
+        </div>
       </div>
-  </div>
-  <div class="list row list-view">
+  </span>
+  <div class="row list-view">
     <div class="col col-lg-12">
-      <h4 v-if="!isLoading">{{ objectName }} List
+      <h4 v-if="!isLoading">
         <vue-final-modal :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
             <button class="modal__close" @click="showCreate = false" />
             <CreateForm 
                 @onFormSubmit="showCreate = false; refreshList()" 
                 :objectProps="objectProps"
                 :objectURL="objectURL"
-                :objectName="objectName"
-                :byObject="byObject || ''"
-                :byObjectId="byObjectId || ''" />
+                :objectName="objectName" />
         </vue-final-modal>
         <button class="btn btn-primary" @click="showCreate = true">Add a{{ (objectName[0].match(/[AEIOUaeiou]/g) ? 'n ' +  objectName : ' ' + objectName)}}</button>
       </h4>
@@ -44,6 +43,7 @@
 <script>
 import { defineAsyncComponent, ref } from 'vue';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
+import SubtaskList from "@/views/Subtask/SubtaskList.vue";
 import GET from "@/composables/GET";
 import { VueFinalModal } from 'vue-final-modal';
 import ObjectCard from "@/components/ObjectCard.vue";
@@ -52,8 +52,9 @@ import UpdateForm from "@/components/UpdateForm.vue";
 
 export default {
   name: "objects-list",
-  components: { UpdateForm, CreateForm, ObjectCard, VueFinalModal },
+  components: { UpdateForm, CreateForm, ObjectCard, VueFinalModal, SubtaskList },
   props: {
+    getURL: String,
     objectURL: String,
     childComponent: String,
     childCreateComponent: String,
@@ -67,8 +68,7 @@ export default {
     },
     searchByURL: String,
     objectName: String,
-    byObjectId: [String, Number],
-    byObject: String
+    byObjectId: [String, Number]
   },
   data() {
     return {
@@ -78,14 +78,16 @@ export default {
       searchValue: "",
       showCreate: false,
       showEdit: false,
+      showSubtasks: false,
       tabulator: null,
       tableData: [],
-      isLoading: true
+      isLoading: true,
+      subtaskKey: 0
     };
   },
   methods: {
     async retrieveObjects() {
-      this.objects = await GET(this.objectURL);
+      this.objects = await GET(this.getURL);
       return this.objects;
     },
     async refreshList() {
@@ -122,6 +124,7 @@ export default {
     });
     this.tabulator.on('rowClick', (e, row) => {
             this.setActiveObject(row.getData(), row.getIndex());
+            this.subtaskKey++;
             console.log(row.getIndex);
     });
     

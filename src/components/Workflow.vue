@@ -9,7 +9,8 @@
             <Input :prop="prop" :object="object" v-if="prop.subOf == 'taskType'" @onOptionChange="taskTypeChange" @onCreate="onCreate(prop.subOf)" objectName="assignedTask"></Input>
             <Input :prop="prop" :object="object" v-else-if="prop.subOf == 'targetType'" @onOptionChange="targetTypeChange" @onCreate="onCreate(prop.subOf)" objectName="assignedTask"></Input>
             <Input :prop="prop" :object="object" v-else-if="prop.subOf == 'target'" @onOptionChange="targetChange" @onCreate="onCreate(prop.subOf)" objectName="assignedTask"></Input>
-            <Input :prop="prop" :object="object" v-else objectName="assignedTask"></Input>
+            <Input :prop="prop" :object="object" v-else-if="!prop.subOf && prop.name == 'timeOfDay'" objectName="assignedTask" @onDateTimePicked="onTimeOfDayChange(); forceRerender()"></Input>
+            <Input :prop="prop" :object="object" v-else objectName="assignedTask" @onDateTimePicked="forceRerender"></Input>
         <hr v-if="prop.name == 'taskTypeId'" />
         <span class="info" v-if="prop.name == 'taskTypeId'" >Assigned Task Options</span>
         </div>
@@ -19,6 +20,16 @@
 </template>
 <script setup>
 import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
+import Input from "@/components/Input.vue";
+import Form from "@/components/Form.vue";
+import POST from "@/composables/POST";
+import GET from "@/composables/GET";
+import PUT from "@/composables/PUT";
+import DELETE from "@/composables/DELETE";
+import dateFunc from 'date-and-time';
+import getProperties from "@/composables/getProperties.js";
+import AssignedTask from "@/types/impl/AssignedTask";
+
     const props = defineProps({
         action: String, 
         onDate: String,
@@ -162,19 +173,12 @@ import { watch, ref, onBeforeMount, onBeforeUpdate } from 'vue';
         });
         document.getElementById("assignedTasktask").innerHTML = options;
     };
+
+    function onTimeOfDayChange() {
+        object['endTimeOfDay'] = {hours: object['timeOfDay'].hours + 1, minutes: 0};
+    }
 </script>
 <script>
-import Input from "@/components/Input.vue";
-import Form from "@/components/Form.vue";
-import POST from "@/composables/POST";
-import GET from "@/composables/GET";
-import PUT from "@/composables/PUT";
-import DELETE from "@/composables/DELETE";
-import dateFunc from 'date-and-time';
-import getProperties from "@/composables/getProperties.js";
-import AssignedTask from "@/types/impl/AssignedTask";
-
-
 export default  {
   name: "workflow",
   emits: ['onFormSubmit'],

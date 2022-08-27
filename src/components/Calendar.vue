@@ -202,8 +202,8 @@ export default {
                         <div class="vuecal__event-title" v-html="event.title" />
                         
                         <small v-if="new Date(event.start).getHours() != '0'" class="vuecal__event-time">
-                            <strong>From:</strong> <span>{{ event.start.formatTime("hh:mm am") }}</span><br/>
-                            <strong>To:</strong> <span>{{ event.end.formatTime("hh:mm am") }}</span>
+                            <strong>From:</strong> <span>{{ event.start.formatTime("h:mm am") }}</span><br/>
+                            <strong>To:</strong> <span>{{ event.end.formatTime("h:mm am") }}</span>
                         </small>
                 </template>
         </vue-cal>
@@ -261,7 +261,18 @@ export default {
 .list.row {
     width: fit-content;
 }
-.vuecal {
-    min-width: 600px;
+@media only screen and (min-width: 400px) {
+    .vuecal {
+        min-width: 600px;
+    }
+}
+@media only screen and (max-width: 400px) {
+    .vuecal {
+        min-width: 300px;
+        height: 1000px;
+    }
+    #main-view.collapsed {
+        padding-left: 50px;
+    }
 }
 </style>

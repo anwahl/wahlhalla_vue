@@ -5,6 +5,11 @@
   <div v-if="!isLoading">
     <ViewButton v-for="(cat, index) in categories" :item="cat.name" @viewEvent="viewCategory(cat)" ></ViewButton>
   </div>
+  <hr>
+  <div v-if="(category == 'LIST' || category == 'OTHER') && !isLoading">
+      <AssignedTaskList :byCategory="category" />
+  <hr>
+  </div>
   <div v-if="!isLoading">
     <h4>{{ categoryName }}</h4>
     <Calendar v-if="renderCalendar" @updateEvents="forceRerender" :category="category" ></Calendar>
@@ -14,10 +19,11 @@
 <script>
 import Calendar from "@/components/Calendar.vue";
 import ViewButton from "@/components/buttons/ViewButton.vue";
+import AssignedTaskList from "@/views/AssignedTask/AssignedTaskList.vue";
 
 export default {
   name: 'dashboard',
-  components: { Calendar, ViewButton },
+  components: { Calendar, ViewButton, AssignedTaskList },
   data () {
     return {
         isLoading: true,
