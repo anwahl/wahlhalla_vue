@@ -9,14 +9,8 @@
       </div>
   </div>
 </template>
- 
 <script>
 export default {
-  name: 'callback',
-  mounted() {
-    this.$auth.handleAuthentication().then((data) => {
-      this.$router.push({ name: 'home' })
-    })
-  }
+  name: '404'
 }
 </script>

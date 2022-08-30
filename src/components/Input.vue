@@ -17,7 +17,7 @@
           :name="prop.name"
           v-if="prop.type == 'inputSelect'">
             <option></option>
-            <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{ prop.itemSubOf ? item[prop.itemSubOf][prop.itemDisplay] : item[prop.itemDisplay] }}</option>
+            <option v-for="item in prop.items" :value="item.id ? item.id : item[prop.itemDisplay]">{{prop.itemSubOfSub ? prop.itemSubOf ? prop.itemOtherDisplay ? item[prop.itemOtherDisplay] + ' - ' + item[prop.itemSubOf][prop.itemDisplay] + ' (' + item[prop.itemSubOf][prop.itemSubOfSub][prop.itemSubDisplay] + ')' : item[prop.itemSubOf][prop.itemDisplay] + ' (' + item[prop.itemSubOf][prop.itemSubOfSub][prop.itemSubDisplay] + ')'  : item[prop.itemDisplay] + ' (' + item[prop.itemSubOfSub][prop.itemSubDisplay] + ')'  : prop.itemSubOf ? item[prop.itemSubOf][prop.itemDisplay] : item[prop.itemDisplay] }}</option>
         </select>
         <button class="btn btn-secondary btn-inline" v-if="prop.type == 'inputSelect' && prop.subOf" type="button" @click="create(prop.subOf)">Create</button>
         <vue-final-modal v-if="prop.type == 'inputSelect' && prop.subOf" :lock-scroll="false" v-model="showCreate" :esc-to-close="true" classes="modal-container" content-class="modal-content">
@@ -38,22 +38,28 @@
           v-if="prop.type == 'inputNumber'"
          />
         <Datepicker :enableTimePicker="false" autoApply :textInput="true" 
-          :id="prop.name"
+          :id="objectName+prop.name"
+          :inputClassName="objectName+prop.name"
           :required="prop.required ? true : false"
-          :name="prop.name"
+          :name="objectName+prop.name"
           v-model="object[prop.name]"
           v-if="prop.type == 'inputDate'"
+          @update:modelValue="$emit('onDateTimePicked')"
         />
         <Datepicker timePicker
-          :id="prop.name"
+          :id="objectName+prop.name"
+          :inputClassName="objectName+prop.name"
           :required="prop.required ? true : false"
           v-model="object[prop.name]"
-          :name="prop.name"
+          :name="objectName+prop.name"
           v-if="prop.type == 'inputTime'"
-           />
+          :is24="false"
+          :startTime="{minutes: 0}"
+          @update:modelValue="$emit('onDateTimePicked')"
+        />
         <label class="checkboxContainer" v-if="prop.type == 'inputCheck'">
           <input
-              type="checkbox"
+              type="checkbox" 
               :id="prop.name"
               :required="prop.required ? true : false"
               v-model="object[prop.name]"
@@ -76,7 +82,7 @@ import { defineAsyncComponent } from 'vue'
 
 export default {
     name: "form-input",
-    emits: ['onOptionChange','onCreate'],
+    emits: ['onOptionChange','onCreate','onDateTimePicked'],
     components: {
         Datepicker, VueFinalModal, CreateForm: defineAsyncComponent(() => import('@/components/CreateForm.vue'))
     },
