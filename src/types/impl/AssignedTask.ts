@@ -47,7 +47,7 @@ export default class AssignedTask implements AssignedTaskInterface{
     type = {label: 'Type',
         name: 'type',
         type: 'inputSelect',
-        items : [{name: 'DAILY'},{name: 'WEEKLY'},{name: 'MONTHLY'},{name: 'YEARLY'},{name: 'STANDALONE'}],
+        items : [{name: 'DAILY'},{name: 'WEEKLY'},{name: 'BIWEEKLY'},{name: 'MONTHLY'},{name: 'YEARLY'},{name: 'STANDALONE'}],
         itemDisplay : 'name',
         required: true,
         updatable: false,
